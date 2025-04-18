@@ -1,0 +1,36 @@
+project:
+  type: book
+
+execute: 
+  freeze: auto
+
+book:
+  title: "GradeThesis"
+  author: "gaoch@mail.hzau.edu.cn"
+  date: now
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - part: Student No. 1
+      chapters:
+        - 01-lzx/data-preprocess.qmd
+        - 01-lzx/data-analysis.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+    include-in-header: 
+          text: |
+            \usepackage{ctex}
+            \usepackage{amsthm,mathrsfs}
+            \usepackage{fvextra}
+            \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+
+
+

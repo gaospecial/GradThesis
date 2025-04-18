@@ -86,8 +86,15 @@ rawdata
 根据 `protein_content` 列的定义，其取值应该是：
 
 $$
-\text{leaf_protein_content} = \frac{\text{first_leaf_weight}}{\text{sample_weight}} \times \text{sample_protein_content}
+\text{Protein}_{\text{leaf}} = \frac{W_{\text{leaf}}}{W_{\text{sample}}} \times C_{\text{protein}}
 $$
+
+其中：
+
+- $W_{\text{leaf}}$：第一片叶子的质量  
+- $W_{\text{sample}}$：样本总质量  
+- $C_{\text{protein}}$：样本的蛋白质含量  
+- $\text{Protein}_{\text{leaf}}$：第一片叶子的蛋白质含量
 
 因此，我们可以通过 `mutate()` 函数重新计算 `protein_content` 列的值，并将新计算的值（`protein_content_2`）与原始数据中的 `protein_content` 列进行比较。
 
