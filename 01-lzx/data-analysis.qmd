@@ -1,0 +1,202 @@
+# 数据分析
+
+## 载入数据
+
+```{r}
+library(tidyverse)
+file = xfun::magic_path("20250418-combined-processed.csv")
+data = read_csv(file) |> 
+    mutate(syncom = fct_relevel(syncom, "空白对照"))
+
+data
+```
+
+
+## 合成菌群对玉米生长的影响
+
+一共测量了 15 个合成菌群对玉米生长的影响，测量的指标包括：
+
+- 玉米整株鲜重
+- 玉米地上部鲜重
+- 玉米地下部鲜重
+
+下面分别分析这三个指标。
+
+### 对玉米总生物量的影响
+
+首先，我们来分析合成菌群对玉米整株鲜重的影响。我们将使用 `fresh_weight` 列来表示玉米整株的鲜重。
+
+```{r}
+growth_data_whole = data |> 
+  select(syncom, fresh_weight)
+```
+
+接下来，我们将计算每个合成菌群的平均鲜重和标准差。这里使用 `group_by()` 函数来按 `syncom` 列分组，然后使用 `summarise()` 函数来计算平均值和标准差。最后，我们将使用 `mutate()` 函数来将平均值和标准差合并为一个字符串，并使用 `select()` 函数来选择需要的列。
+
+最终的结果将以表格的形式展示。这里我们使用了 `kableExtra` 包来美化表格。
+
+```{r}
+library(kableExtra)
+
+# 计算每个合成菌群的平均鲜重和标准差
+growth_data_whole |> 
+  group_by(syncom) |> 
+  summarise(mean_fresh_weight = mean(fresh_weight, na.rm = TRUE),
+            std_fresh_weight = sd(fresh_weight, na.rm = TRUE)) |> 
+  ungroup() |> 
+  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), " ± ", round(std_fresh_weight, 2))) |>
+  select(syncom, fresh_weight)  |> 
+  kbl()
+```
+
+为了可视化合成菌群对玉米整株鲜重的影响，我们将使用 `ggplot2` 包来绘制箱线图。我们将使用 `geom_boxplot()` 函数来绘制箱线图，使用 `geom_jitter()` 函数来添加散点图，并使用 `stat_compare_means()` 函数来添加显著性差异的标记。
+
+这里，我们使用 `t.test()` 函数来进行两两比较，并使用 `ref.group` 参数来指定参考组为“空白对照”。最后，我们将使用 `labs()` 函数来添加标题和坐标轴标签。
+
+结果显示，合成菌群对玉米整株鲜重的影响并不显著（[@fig-whole-weight]）。
+
+```{r}
+#| label: fig-whole-weight
+#| fig-cap: 合成菌群对玉米整株生物量的影响
+library(ggpubr) # 用于添加显著性差异的标记
+theme_set(theme_bw()) # 设置主题为白色背景
+library(showtext) # 用于中文字体支持
+showtext_auto()
+
+ggplot(growth_data_whole, aes(x = syncom, y = fresh_weight)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "空白对照", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on seedling biomass",
+       x = "Synthetic community",
+       y = "Fresh weight (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 30))
+```
+
+### 对玉米地上部生物量的影响
+
+接下来，我们来分析合成菌群对玉米地上部鲜重的影响。我们将使用 `shoot_weight` 列来表示玉米地上部的鲜重。
+
+```{r}
+growth_data_shoot = data |> 
+  select(syncom, shoot_weight)
+```
+
+计算的过程和结果的呈现方式与前类似，这里不在赘述。
+
+```{r}
+# 计算每个合成菌群的平均鲜重和标准差
+growth_data_shoot |> 
+  group_by(syncom) |> 
+  summarise(mean_fresh_weight = mean(shoot_weight, na.rm = TRUE),
+            std_fresh_weight = sd(shoot_weight, na.rm = TRUE)) |> 
+  ungroup() |> 
+  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), " ± ", round(std_fresh_weight, 2))) |>
+  select(syncom, fresh_weight)  |> 
+  kbl()
+```
+
+```{r}
+#| label: fig-shoot-weight
+#| fig-cap: 合成菌群对玉米地上部生物量的影响
+ggplot(growth_data_shoot, aes(x = syncom, y = shoot_weight)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "空白对照", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on seedling biomass",
+       x = "Synthetic community",
+       y = "Fresh weight of shoot (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 30))
+```
+
+由 [@fig-shoot-weight] 可知，合成菌群对玉米地上部生物量的影响均不显著。
+
+### 对玉米地下部生物量的影响
+
+最后，我们来分析合成菌群对玉米地下部鲜重的影响。我们将使用 `root_weight` 列来表示玉米地下部的鲜重。计算的过程和结果的呈现方式与前类似，这里不在赘述。
+
+```{r}
+growth_data_root = data |> 
+  select(syncom, root_weight)
+```
+
+```{r}
+# 计算每个合成菌群的平均鲜重和标准差
+growth_data_root |> 
+  group_by(syncom) |> 
+  summarise(mean_fresh_weight = mean(root_weight, na.rm = TRUE),
+            std_fresh_weight = sd(root_weight, na.rm = TRUE)) |> 
+  ungroup() |> 
+  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), " ± ", round(std_fresh_weight, 2))) |>
+  select(syncom, fresh_weight)  |> 
+  kbl()
+```
+
+```{r}
+#| label: fig-root-weight
+#| fig-cap: 合成菌群对玉米地下部生物量的影响
+ggplot(growth_data_root, aes(x = syncom, y = root_weight)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "空白对照", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on seedling biomass",
+       x = "Synthetic community",
+       y = "Fresh weight of root (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 30))
+```
+
+由 [@fig-root-weight] 可知，合成菌群对玉米地下部生物量的影响并不显著。不过，含有 `CMF9/F19/G5/D` 的合成菌群对玉米地下部生物量的影响显著高于空白对照组。
+
+## 合成菌群对玉米蛋白质积累的影响
+
+在这一部分，我们将分析合成菌群对玉米蛋白质积累的影响。我们将使用 `leaf_protein_content` 列来表示玉米叶片的蛋白质含量。
+
+数据分析方式与前面类似，这里不在赘述。
+
+```{r}
+protein_content = data |> 
+  select(syncom, leaf_protein_content)
+```
+
+```{r}
+# 计算每个合成菌群的平均鲜重和标准差
+protein_content |> 
+  group_by(syncom) |> 
+  summarise(mean_protein_content = mean(leaf_protein_content, na.rm = TRUE),
+            std_protein_content = sd(leaf_protein_content, na.rm = TRUE)) |>
+  ungroup() |>
+  mutate(protein_content = paste0(round(mean_protein_content, 2), " ± ", round(std_protein_content, 2))) |>
+  select(syncom, protein_content)  |>
+  kbl()
+```
+
+
+```{r}
+#| label: fig-protein-content
+#| fig-cap: 合成菌群对玉米蛋白质积累的影响
+ggplot(protein_content, aes(x = syncom, y = leaf_protein_content)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "空白对照", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(x = "Synthetic community",
+       y = "Protein content (mg/g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 30))
+```
+
+由 [@fig-protein-content] 可知，大部分合成菌群对玉米蛋白质积累的影响并不显著。不过，含有 `CK1/CMF9/CMF18/F19/G5/KF11` 的合成菌群对玉米蛋白质积累的影响显著高于空白对照组。
