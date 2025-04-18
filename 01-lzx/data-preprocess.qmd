@@ -1,0 +1,127 @@
+# 数据预处理
+
+将数据处理成整洁的格式，便于后续分析和可视化。
+
+## 载入包
+
+首先，载入需要用到的包。
+
+`tidyverse` 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。在这里，我们即将用到 `dplyr` 包中的 `filter()`、`mutate()` 和 `select()` 函数，以及 `tidyr` 包中的 `fill()` 函数。使用 `library(tidyverse)` 可以一次性载入所有的包。
+
+- `filter()` 用于筛选数据。
+- `mutate()` 用于添加或修改数据框中的列。
+- `select()` 用于选择数据框中的列。
+- `fill()` 用于填充缺省的值。
+
+`openxlsx` 包用于读取 Excel 文件。我们将用到 `read.xlsx()` 函数来读取数据。
+
+```{r}
+# 载入必要的包
+library(tidyverse)
+library(openxlsx)
+```
+
+## 读取数据
+
+其次，读取数据。我们将使用 `read.xlsx()` 函数来读取 Excel 文件。文件名为 `20250418-combined.xlsx`。这里，我们使用 `xfun::magic_path()` 函数来获取文件的路径。`magic_path()` 函数会自动处理文件路径的问题，确保在路径复杂的情况下也能正确找到相应的文件。
+
+```{r}
+# 读取数据
+file = xfun::magic_path("20250418-combined.xlsx")
+rawdata = read.xlsx(file) |> as_tibble()
+```
+
+## 数据预览
+
+接下来，我们可以预览一下数据。使用 `rawdata` 可以查看数据框的前几行。输出中可以看到数据一共有 `{r} nrow(rawdata)` 行和 `{r} ncol(rawdata)` 列。
+
+```{r}
+# 数据预览
+rawdata
+```
+
+为了方便后续对数据的使用，我们将列名修改为英文字符。我们将使用 `colnames()` 函数来修改列名。新的列名包括：`syncom`、`id`、`fresh_weight`、`shoot_weight`、`root_weight`、`first_leaf_weight`、`sample_weight`、`absorbance`、`protein_conc` 和 `protein_content`。
+
+- `syncom`：合成菌群的菌株组成；
+- `id`：样本的 ID；
+- `fresh_weight`：玉米整株的鲜重；
+- `shoot_weight`：玉米地上部的鲜重；
+- `root_weight`：玉米地下部的鲜重；
+- `first_leaf_weight`：玉米第一片叶子的鲜重；
+- `sample_weight`：测量蛋白质含量时，自玉米第一片叶子上取样后，样本的鲜重；
+- `absorbance`：使用考马斯亮蓝方法检测样本蛋白质含量时，在 590 nm 波长下的吸光值；
+- `protein_conc`：使用考马斯亮蓝方法检测样本蛋白质含量时，根据标准曲线计算出的样本蛋白质浓度（注：**缺标准曲线**）；
+- `protein_content`：根据玉米第一片叶子的鲜重（`first_leaf_weight`）、取样鲜重（`sample_weight`）、蛋白质浓度（`protein_conc`）计算出来的第一步叶子的全部蛋白质含量。
+
+```{r}
+# 重命名列
+colnames = c('syncom','id','fresh_weight','shoot_weight','root_weight','first_leaf_weight','sample_weight','absorbance','sample_protein_content', 'leaf_protein_content')
+colnames(rawdata) = colnames
+```
+
+
+```{r}
+# 填充省略的值
+rawdata = rawdata |> 
+  filter(!is.na(id)) |>
+  fill(syncom, .direction = "down") |> 
+  mutate(
+    fresh_weight = as.numeric(fresh_weight),
+    shoot_weight = as.numeric(shoot_weight),
+    root_weight = as.numeric(root_weight),
+    first_leaf_weight = as.numeric(first_leaf_weight),
+    sample_weight = as.numeric(sample_weight),
+    absorbance = as.numeric(absorbance),
+    sample_protein_content = as.numeric(sample_protein_content),
+    leaf_protein_content = as.numeric(leaf_protein_content)
+  ) |> 
+  select(id, everything())
+
+# 数据预览
+rawdata
+```
+
+## 数据校验
+
+根据 `protein_content` 列的定义，其取值应该是：
+
+$$
+\text{leaf_protein_content} = \frac{\text{first_leaf_weight}}{\text{sample_weight}} \times \text{sample_protein_content}
+$$
+
+因此，我们可以通过 `mutate()` 函数重新计算 `protein_content` 列的值，并将新计算的值（`protein_content_2`）与原始数据中的 `protein_content` 列进行比较。
+
+```{r}
+# 重新计算的 protein_content
+rawdata = rawdata |> 
+  mutate(
+    leaf_protein_content_2 = (first_leaf_weight / sample_weight) * sample_protein_content
+  )
+```
+
+
+当使用 `ggplot2` 包绘制散点图时，我们使用 `geom_smooth()` 函数添加了一条线性回归线（`method = "lm"`），并使用 `coord_equal()` 函数确保 x 轴和 y 轴的比例相同。通过这种方式，我们可以直观地看到原始数据中的 `protein_content` 列的值与重新计算的值（`protein_content_2`）之间的关系。
+
+结果显示： `protein_content` 列的值与重新计算的值（`protein_content_2`）完全一致。
+
+```{r}
+# 绘制散点图
+ggplot(rawdata, aes(x = leaf_protein_content, y = leaf_protein_content_2)) +
+  geom_smooth(method = "lm", se = TRUE, lty = "dashed") +
+  geom_point(size = 2, alpha = 0.5) +
+  theme_bw() +
+  coord_equal() +
+  labs(x = "Protein Content of First Leaf - Original (mg)",
+       y = "Protein Content of First Leaf - Recalculated (mg)")
+```
+
+
+## 数据保存
+
+最后，我们将处理好的数据保存为一个新的 CSV 文件。我们使用 `write.csv()` 函数将数据保存为 CSV 格式。文件名为 `20250418-combined-processed.csv`，并将其保存在 `data` 文件夹中。
+
+
+```{r}
+# 保存数据
+write_csv(rawdata, "data/20250418-combined-processed.csv")
+```
