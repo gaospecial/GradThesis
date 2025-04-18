@@ -194,7 +194,7 @@ ggplot(protein_content, aes(x = syncom, y = leaf_protein_content)) +
                      label = "p.signif", 
                      hide.ns = TRUE) +
   labs(x = "Synthetic community",
-       y = "Protein content (mg/g)") +
+       y = "Protein content (mg)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.margin = margin(l = 30))
 ```
