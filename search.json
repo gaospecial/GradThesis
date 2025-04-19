@@ -1,0 +1,438 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "GradeThesis",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book, created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "这是针对 2025 届毕业生毕业设计数据分析和可视化的一份教学材料。",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html",
+    "href": "01-lzx/data-preprocess.html",
+    "title": "2  数据预处理",
+    "section": "",
+    "text": "2.1 载入包\n首先，载入需要用到的包。\ntidyverse 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。在这里，我们即将用到 dplyr 包中的 filter()、mutate() 和 select() 函数，以及 tidyr 包中的 fill() 函数。使用 library(tidyverse) 可以一次性载入所有的包。\nopenxlsx 包用于读取 Excel 文件。我们将用到 read.xlsx() 函数来读取数据。\n# 载入必要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(openxlsx)",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html#载入包",
+    "href": "01-lzx/data-preprocess.html#载入包",
+    "title": "2  数据预处理",
+    "section": "",
+    "text": "filter() 用于筛选数据。\nmutate() 用于添加或修改数据框中的列。\nselect() 用于选择数据框中的列。\nfill() 用于填充缺省的值。",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html#读取数据",
+    "href": "01-lzx/data-preprocess.html#读取数据",
+    "title": "2  数据预处理",
+    "section": "2.2 读取数据",
+    "text": "2.2 读取数据\n其次，读取数据。我们将使用 read.xlsx() 函数来读取 Excel 文件。文件名为 20250418-combined.xlsx。这里，我们使用 xfun::magic_path() 函数来获取文件的路径。magic_path() 函数会自动处理文件路径的问题，确保在路径复杂的情况下也能正确找到相应的文件。\n\n# 读取数据\nfile = xfun::magic_path(\"20250418-combined.xlsx\")\nrawdata = read.xlsx(file) |&gt; as_tibble()",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html#数据预览",
+    "href": "01-lzx/data-preprocess.html#数据预览",
+    "title": "2  数据预处理",
+    "section": "2.3 数据预览",
+    "text": "2.3 数据预览\n接下来，我们可以预览一下数据。使用 rawdata 可以查看数据框的前几行。输出中可以看到数据一共有 61 行和 10 列。\n\n# 数据预览\nrawdata\n\n# A tibble: 61 × 10\n   合成菌群       序号  总鲜重 地上部 地下部 第一片叶总重量 测蛋白质所取叶片重量\n   &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                         &lt;dbl&gt;\n 1 CK1/CK22/F19/… 1-1   3.205  2.427   0.778 0.16300000000…                0.105\n 2 &lt;NA&gt;           1-2   3.105  2.333   0.772 0.16500000000…                0.098\n 3 &lt;NA&gt;           1-3   1.890  1.390   0.5   0.105                         0.105\n 4 &lt;NA&gt;           1-4   3.550  2.886   0.664 0.126                         0.099\n 5 CK1/CK22/CMF9… 3-1   4.466  3.219   1.25  0.19700000000…                0.103\n 6 &lt;NA&gt;           3-2   3.772  2.708   1.06  0.157                         0.097\n 7 &lt;NA&gt;           3-3   2.839  1.959   0.88  0.13700000000…                0.099\n 8 &lt;NA&gt;           3-4   2.700  1.885   0.815 0.107                         0.1  \n 9 CK1/CK22/D     5-1   1.872  1.295   0.577 9.29999999999…                0.093\n10 &lt;NA&gt;           5-2   3.836  2.946   0.89  0.122                         0.099\n# ℹ 51 more rows\n# ℹ 3 more variables: 吸光度 &lt;dbl&gt;, `蛋白质含量（测量值）` &lt;dbl&gt;,\n#   `蛋白质总量（第一片叶）` &lt;dbl&gt;\n\n\n为了方便后续对数据的使用，我们将列名修改为英文字符。我们将使用 colnames() 函数来修改列名。新的列名包括：syncom、id、fresh_weight、shoot_weight、root_weight、first_leaf_weight、sample_weight、absorbance、protein_conc 和 protein_content。\n\nsyncom：合成菌群的菌株组成；\nid：样本的 ID；\nfresh_weight：玉米整株的鲜重；\nshoot_weight：玉米地上部的鲜重；\nroot_weight：玉米地下部的鲜重；\nfirst_leaf_weight：玉米第一片叶子的鲜重；\nsample_weight：测量蛋白质含量时，自玉米第一片叶子上取样后，样本的鲜重；\nabsorbance：使用考马斯亮蓝方法检测样本蛋白质含量时，在 590 nm 波长下的吸光值；\nprotein_conc：使用考马斯亮蓝方法检测样本蛋白质含量时，根据标准曲线计算出的样本蛋白质浓度（注：缺标准曲线）；\nprotein_content：根据玉米第一片叶子的鲜重（first_leaf_weight）、取样鲜重（sample_weight）、蛋白质浓度（protein_conc）计算出来的第一步叶子的全部蛋白质含量。\n\n\n# 重命名列\ncolnames = c('syncom','id','fresh_weight','shoot_weight','root_weight','first_leaf_weight','sample_weight','absorbance','sample_protein_content', 'leaf_protein_content')\ncolnames(rawdata) = colnames\n\n\n# 填充省略的值\nrawdata = rawdata |&gt; \n  filter(!is.na(id)) |&gt;\n  fill(syncom, .direction = \"down\") |&gt; \n  mutate(\n    fresh_weight = as.numeric(fresh_weight),\n    shoot_weight = as.numeric(shoot_weight),\n    root_weight = as.numeric(root_weight),\n    first_leaf_weight = as.numeric(first_leaf_weight),\n    sample_weight = as.numeric(sample_weight),\n    absorbance = as.numeric(absorbance),\n    sample_protein_content = as.numeric(sample_protein_content),\n    leaf_protein_content = as.numeric(leaf_protein_content)\n  ) |&gt; \n  select(id, everything())\n\n# 数据预览\nrawdata\n\n# A tibble: 60 × 10\n   id    syncom          fresh_weight shoot_weight root_weight first_leaf_weight\n   &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;             &lt;dbl&gt;\n 1 1-1   CK1/CK22/F19/G…         3.20         2.43       0.778             0.163\n 2 1-2   CK1/CK22/F19/G…         3.10         2.33       0.772             0.165\n 3 1-3   CK1/CK22/F19/G…         1.89         1.39       0.5               0.105\n 4 1-4   CK1/CK22/F19/G…         3.55         2.89       0.664             0.126\n 5 3-1   CK1/CK22/CMF9/…         4.47         3.22       1.25              0.197\n 6 3-2   CK1/CK22/CMF9/…         3.77         2.71       1.06              0.157\n 7 3-3   CK1/CK22/CMF9/…         2.84         1.96       0.88              0.137\n 8 3-4   CK1/CK22/CMF9/…         2.7          1.88       0.815             0.107\n 9 5-1   CK1/CK22/D              1.87         1.30       0.577             0.093\n10 5-2   CK1/CK22/D              3.84         2.95       0.89              0.122\n# ℹ 50 more rows\n# ℹ 4 more variables: sample_weight &lt;dbl&gt;, absorbance &lt;dbl&gt;,\n#   sample_protein_content &lt;dbl&gt;, leaf_protein_content &lt;dbl&gt;",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html#数据校验",
+    "href": "01-lzx/data-preprocess.html#数据校验",
+    "title": "2  数据预处理",
+    "section": "2.4 数据校验",
+    "text": "2.4 数据校验\n根据 protein_content 列的定义，其取值应该是：\n\\[\n\\text{Protein}_{\\text{leaf}} = \\frac{W_{\\text{leaf}}}{W_{\\text{sample}}} \\times C_{\\text{protein}}\n\\]\n其中：\n\n\\(W_{\\text{leaf}}\\)：第一片叶子的质量\n\n\\(W_{\\text{sample}}\\)：样本总质量\n\n\\(C_{\\text{protein}}\\)：样本的蛋白质含量\n\n\\(\\text{Protein}_{\\text{leaf}}\\)：第一片叶子的蛋白质含量\n\n因此，我们可以通过 mutate() 函数重新计算 protein_content 列的值，并将新计算的值（protein_content_2）与原始数据中的 protein_content 列进行比较。\n\n# 重新计算的 protein_content\nrawdata = rawdata |&gt; \n  mutate(\n    leaf_protein_content_2 = (first_leaf_weight / sample_weight) * sample_protein_content\n  )\n\n当使用 ggplot2 包绘制散点图时，我们使用 geom_smooth() 函数添加了一条线性回归线（method = \"lm\"），并使用 coord_equal() 函数确保 x 轴和 y 轴的比例相同。通过这种方式，我们可以直观地看到原始数据中的 protein_content 列的值与重新计算的值（protein_content_2）之间的关系。\n结果显示： protein_content 列的值与重新计算的值（protein_content_2）完全一致。\n\n# 绘制散点图\nggplot(rawdata, aes(x = leaf_protein_content, y = leaf_protein_content_2)) +\n  geom_smooth(method = \"lm\", se = TRUE, lty = \"dashed\") +\n  geom_point(size = 2, alpha = 0.5) +\n  theme_bw() +\n  coord_equal() +\n  labs(x = \"Protein Content of First Leaf - Original (mg)\",\n       y = \"Protein Content of First Leaf - Recalculated (mg)\")\n\n`geom_smooth()` using formula = 'y ~ x'",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-preprocess.html#数据保存",
+    "href": "01-lzx/data-preprocess.html#数据保存",
+    "title": "2  数据预处理",
+    "section": "2.5 数据保存",
+    "text": "2.5 数据保存\n最后，我们将处理好的数据保存为一个新的 CSV 文件。我们使用 write.csv() 函数将数据保存为 CSV 格式。文件名为 20250418-combined-processed.csv，并将其保存在 data 文件夹中。\n\n# 保存数据\nwrite_csv(rawdata, \"data/20250418-combined-processed.csv\")",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-analysis.html",
+    "href": "01-lzx/data-analysis.html",
+    "title": "3  数据分析",
+    "section": "",
+    "text": "3.1 载入数据\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nfile = xfun::magic_path(\"20250418-combined-processed.csv\")\ndata = read_csv(file) |&gt; \n    mutate(syncom = fct_relevel(syncom, \"空白对照\"))\n\nRows: 60 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): id, syncom\ndbl (9): fresh_weight, shoot_weight, root_weight, first_leaf_weight, sample_...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\ndata\n\n# A tibble: 60 × 11\n   id    syncom          fresh_weight shoot_weight root_weight first_leaf_weight\n   &lt;chr&gt; &lt;fct&gt;                  &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;             &lt;dbl&gt;\n 1 1-1   CK1/CK22/F19/G…         3.20         2.43       0.778             0.163\n 2 1-2   CK1/CK22/F19/G…         3.10         2.33       0.772             0.165\n 3 1-3   CK1/CK22/F19/G…         1.89         1.39       0.5               0.105\n 4 1-4   CK1/CK22/F19/G…         3.55         2.89       0.664             0.126\n 5 3-1   CK1/CK22/CMF9/…         4.47         3.22       1.25              0.197\n 6 3-2   CK1/CK22/CMF9/…         3.77         2.71       1.06              0.157\n 7 3-3   CK1/CK22/CMF9/…         2.84         1.96       0.88              0.137\n 8 3-4   CK1/CK22/CMF9/…         2.7          1.88       0.815             0.107\n 9 5-1   CK1/CK22/D              1.87         1.30       0.577             0.093\n10 5-2   CK1/CK22/D              3.84         2.95       0.89              0.122\n# ℹ 50 more rows\n# ℹ 5 more variables: sample_weight &lt;dbl&gt;, absorbance &lt;dbl&gt;,\n#   sample_protein_content &lt;dbl&gt;, leaf_protein_content &lt;dbl&gt;,\n#   leaf_protein_content_2 &lt;dbl&gt;",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-analysis.html#合成菌群对玉米生长的影响",
+    "href": "01-lzx/data-analysis.html#合成菌群对玉米生长的影响",
+    "title": "3  数据分析",
+    "section": "3.2 合成菌群对玉米生长的影响",
+    "text": "3.2 合成菌群对玉米生长的影响\n一共测量了 15 个合成菌群对玉米生长的影响，测量的指标包括：\n\n玉米整株鲜重\n玉米地上部鲜重\n玉米地下部鲜重\n\n下面分别分析这三个指标。\n\n3.2.1 对玉米总生物量的影响\n首先，我们来分析合成菌群对玉米整株鲜重的影响。我们将使用 fresh_weight 列来表示玉米整株的鲜重。\n\ngrowth_data_whole = data |&gt; \n  select(syncom, fresh_weight)\n\n接下来，我们将计算每个合成菌群的平均鲜重和标准差。这里使用 group_by() 函数来按 syncom 列分组，然后使用 summarise() 函数来计算平均值和标准差。最后，我们将使用 mutate() 函数来将平均值和标准差合并为一个字符串，并使用 select() 函数来选择需要的列。\n最终的结果将以表格的形式展示。这里我们使用了 kableExtra 包来美化表格。\n\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows\n\n# 计算每个合成菌群的平均鲜重和标准差\ngrowth_data_whole |&gt; \n  group_by(syncom) |&gt; \n  summarise(mean_fresh_weight = mean(fresh_weight, na.rm = TRUE),\n            std_fresh_weight = sd(fresh_weight, na.rm = TRUE)) |&gt; \n  ungroup() |&gt; \n  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), \" ± \", round(std_fresh_weight, 2))) |&gt;\n  select(syncom, fresh_weight)  |&gt; \n  kbl()\n\n\n\n\nsyncom\nfresh_weight\n\n\n\n\n空白对照\n2.87 ± 0.35\n\n\nCK1/CK22/CMF18/F19/G7/G18/KF11\n2.7 ± 0.4\n\n\nCK1/CK22/CMF18/F19/KF11\n2.5 ± 0.9\n\n\nCK1/CK22/CMF9/CMF18/G5/KF11\n3.44 ± 0.83\n\n\nCK1/CK22/D\n2.8 ± 0.81\n\n\nCK1/CK22/F19/G5/KF11\n2.67 ± 0.52\n\n\nCK1/CK22/F19/G7/KF11\n2.94 ± 0.72\n\n\nCK1/CMF18/F19/G7/D\n2.67 ± 0.28\n\n\nCK1/CMF9/CMF18/F19/G18/D\n3.02 ± 0.75\n\n\nCK1/CMF9/CMF18/F19/G5/KF11\n3.16 ± 0.38\n\n\nCK1/CMF9/CMF18/F19/G7/D\n2.59 ± 0.49\n\n\nCK1/CMF9/F19/G7/D\n2.78 ± 0.23\n\n\nCK22/CMF18/G18/KF11\n3.24 ± 0.42\n\n\nCK22/CMF9/F19/G7/G18/KF11\n3.02 ± 0.53\n\n\nCMF9/F19/G5/D\n2.73 ± 0.25\n\n\n\n\n\n\n\n为了可视化合成菌群对玉米整株鲜重的影响，我们将使用 ggplot2 包来绘制箱线图。我们将使用 geom_boxplot() 函数来绘制箱线图，使用 geom_jitter() 函数来添加散点图，并使用 stat_compare_means() 函数来添加显著性差异的标记。\n这里，我们使用 t.test() 函数来进行两两比较，并使用 ref.group 参数来指定参考组为“空白对照”。最后，我们将使用 labs() 函数来添加标题和坐标轴标签。\n结果显示，合成菌群对玉米整株鲜重的影响并不显著（Figure 3.1）。\n\nlibrary(ggpubr) # 用于添加显著性差异的标记\ntheme_set(theme_bw()) # 设置主题为白色背景\nlibrary(showtext) # 用于中文字体支持\n\nLoading required package: sysfonts\n\n\nLoading required package: showtextdb\n\nshowtext_auto()\n\nggplot(growth_data_whole, aes(x = syncom, y = fresh_weight)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"空白对照\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on seedling biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 30))\n\n\n\n\n\n\n\nFigure 3.1: 合成菌群对玉米整株生物量的影响\n\n\n\n\n\n\n\n3.2.2 对玉米地上部生物量的影响\n接下来，我们来分析合成菌群对玉米地上部鲜重的影响。我们将使用 shoot_weight 列来表示玉米地上部的鲜重。\n\ngrowth_data_shoot = data |&gt; \n  select(syncom, shoot_weight)\n\n计算的过程和结果的呈现方式与前类似，这里不在赘述。\n\n# 计算每个合成菌群的平均鲜重和标准差\ngrowth_data_shoot |&gt; \n  group_by(syncom) |&gt; \n  summarise(mean_fresh_weight = mean(shoot_weight, na.rm = TRUE),\n            std_fresh_weight = sd(shoot_weight, na.rm = TRUE)) |&gt; \n  ungroup() |&gt; \n  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), \" ± \", round(std_fresh_weight, 2))) |&gt;\n  select(syncom, fresh_weight)  |&gt; \n  kbl()\n\n\n\n\nsyncom\nfresh_weight\n\n\n\n\n空白对照\n2.06 ± 0.3\n\n\nCK1/CK22/CMF18/F19/G7/G18/KF11\n1.8 ± 0.27\n\n\nCK1/CK22/CMF18/F19/KF11\n1.77 ± 0.66\n\n\nCK1/CK22/CMF9/CMF18/G5/KF11\n2.44 ± 0.64\n\n\nCK1/CK22/D\n2.03 ± 0.68\n\n\nCK1/CK22/F19/G5/KF11\n2.02 ± 0.43\n\n\nCK1/CK22/F19/G7/KF11\n2.26 ± 0.63\n\n\nCK1/CMF18/F19/G7/D\n1.81 ± 0.17\n\n\nCK1/CMF9/CMF18/F19/G18/D\n2.07 ± 0.7\n\n\nCK1/CMF9/CMF18/F19/G5/KF11\n2.23 ± 0.27\n\n\nCK1/CMF9/CMF18/F19/G7/D\n1.61 ± 0.49\n\n\nCK1/CMF9/F19/G7/D\n2.03 ± 0.2\n\n\nCK22/CMF18/G18/KF11\n2.34 ± 0.29\n\n\nCK22/CMF9/F19/G7/G18/KF11\n2.13 ± 0.4\n\n\nCMF9/F19/G5/D\n1.75 ± 0.26\n\n\n\n\n\n\n\n\nggplot(growth_data_shoot, aes(x = syncom, y = shoot_weight)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"空白对照\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on seedling biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight of shoot (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 30))\n\n\n\n\n\n\n\nFigure 3.2: 合成菌群对玉米地上部生物量的影响\n\n\n\n\n\n由 Figure 3.2 可知，合成菌群对玉米地上部生物量的影响均不显著。\n\n\n3.2.3 对玉米地下部生物量的影响\n最后，我们来分析合成菌群对玉米地下部鲜重的影响。我们将使用 root_weight 列来表示玉米地下部的鲜重。计算的过程和结果的呈现方式与前类似，这里不在赘述。\n\ngrowth_data_root = data |&gt; \n  select(syncom, root_weight)\n\n\n# 计算每个合成菌群的平均鲜重和标准差\ngrowth_data_root |&gt; \n  group_by(syncom) |&gt; \n  summarise(mean_fresh_weight = mean(root_weight, na.rm = TRUE),\n            std_fresh_weight = sd(root_weight, na.rm = TRUE)) |&gt; \n  ungroup() |&gt; \n  mutate(fresh_weight = paste0(round(mean_fresh_weight, 2), \" ± \", round(std_fresh_weight, 2))) |&gt;\n  select(syncom, fresh_weight)  |&gt; \n  kbl()\n\n\n\n\nsyncom\nfresh_weight\n\n\n\n\n空白对照\n0.81 ± 0.06\n\n\nCK1/CK22/CMF18/F19/G7/G18/KF11\n0.9 ± 0.2\n\n\nCK1/CK22/CMF18/F19/KF11\n0.73 ± 0.24\n\n\nCK1/CK22/CMF9/CMF18/G5/KF11\n1 ± 0.19\n\n\nCK1/CK22/D\n0.77 ± 0.16\n\n\nCK1/CK22/F19/G5/KF11\n0.66 ± 0.11\n\n\nCK1/CK22/F19/G7/KF11\n0.68 ± 0.13\n\n\nCK1/CMF18/F19/G7/D\n0.85 ± 0.12\n\n\nCK1/CMF9/CMF18/F19/G18/D\n0.95 ± 0.13\n\n\nCK1/CMF9/CMF18/F19/G5/KF11\n0.93 ± 0.13\n\n\nCK1/CMF9/CMF18/F19/G7/D\n0.99 ± 0.19\n\n\nCK1/CMF9/F19/G7/D\n0.75 ± 0.07\n\n\nCK22/CMF18/G18/KF11\n0.89 ± 0.14\n\n\nCK22/CMF9/F19/G7/G18/KF11\n0.89 ± 0.14\n\n\nCMF9/F19/G5/D\n0.98 ± 0.06\n\n\n\n\n\n\n\n\nggplot(growth_data_root, aes(x = syncom, y = root_weight)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"空白对照\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on seedling biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight of root (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 30))\n\n\n\n\n\n\n\nFigure 3.3: 合成菌群对玉米地下部生物量的影响\n\n\n\n\n\n由 Figure 3.3 可知，合成菌群对玉米地下部生物量的影响并不显著。不过，含有 CMF9/F19/G5/D 的合成菌群对玉米地下部生物量的影响显著高于空白对照组。",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "01-lzx/data-analysis.html#合成菌群对玉米蛋白质积累的影响",
+    "href": "01-lzx/data-analysis.html#合成菌群对玉米蛋白质积累的影响",
+    "title": "3  数据分析",
+    "section": "3.3 合成菌群对玉米蛋白质积累的影响",
+    "text": "3.3 合成菌群对玉米蛋白质积累的影响\n在这一部分，我们将分析合成菌群对玉米蛋白质积累的影响。我们将使用 leaf_protein_content 列来表示玉米叶片的蛋白质含量。\n数据分析方式与前面类似，这里不在赘述。\n\nprotein_content = data |&gt; \n  select(syncom, leaf_protein_content)\n\n\n# 计算每个合成菌群的平均鲜重和标准差\nprotein_content |&gt; \n  group_by(syncom) |&gt; \n  summarise(mean_protein_content = mean(leaf_protein_content, na.rm = TRUE),\n            std_protein_content = sd(leaf_protein_content, na.rm = TRUE)) |&gt;\n  ungroup() |&gt;\n  mutate(protein_content = paste0(round(mean_protein_content, 2), \" ± \", round(std_protein_content, 2))) |&gt;\n  select(syncom, protein_content)  |&gt;\n  kbl()\n\n\n\n\nsyncom\nprotein_content\n\n\n\n\n空白对照\n0.87 ± 0.32\n\n\nCK1/CK22/CMF18/F19/G7/G18/KF11\n1.05 ± 0.14\n\n\nCK1/CK22/CMF18/F19/KF11\n0.88 ± 0.2\n\n\nCK1/CK22/CMF9/CMF18/G5/KF11\n1.16 ± 0.24\n\n\nCK1/CK22/D\n1.03 ± 0.25\n\n\nCK1/CK22/F19/G5/KF11\n1.04 ± 0.11\n\n\nCK1/CK22/F19/G7/KF11\n1.08 ± 0.23\n\n\nCK1/CMF18/F19/G7/D\n1.06 ± 0.23\n\n\nCK1/CMF9/CMF18/F19/G18/D\n1.07 ± 0.24\n\n\nCK1/CMF9/CMF18/F19/G5/KF11\n1.35 ± 0.16\n\n\nCK1/CMF9/CMF18/F19/G7/D\n1.09 ± 0.16\n\n\nCK1/CMF9/F19/G7/D\n0.97 ± 0.19\n\n\nCK22/CMF18/G18/KF11\n1.31 ± 0.25\n\n\nCK22/CMF9/F19/G7/G18/KF11\n1.06 ± 0.26\n\n\nCMF9/F19/G5/D\n0.81 ± 0.09\n\n\n\n\n\n\n\n\nggplot(protein_content, aes(x = syncom, y = leaf_protein_content)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"空白对照\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(x = \"Synthetic community\",\n       y = \"Protein content (mg)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 30))\n\n\n\n\n\n\n\nFigure 3.4: 合成菌群对玉米蛋白质积累的影响\n\n\n\n\n\n由 Figure 3.4 可知，大部分合成菌群对玉米蛋白质积累的影响并不显著。不过，含有 CK1/CMF9/CMF18/F19/G5/KF11 的合成菌群对玉米蛋白质积累的影响显著高于空白对照组。",
+    "crumbs": [
+      "Student No. 1",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html",
+    "href": "02-shix/data-preprocess.html",
+    "title": "4  数据预处理",
+    "section": "",
+    "text": "4.1 载入包\n首先，载入需要用到的包。\ntidyverse 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。\n在这里，我们即将用到 dplyr 包中的 filter()、mutate()、select() 和 pivot_longer() 函数，以及 tidyr 包中的 rename() 函数和 ggplot2 包中的 ggplot() 函数，readr 包中的 write_csv() 函数。\n使用 library(tidyverse) 可以一次性载入所有的包。\nopenxlsx 包用于读取 Excel 文件。我们将用到 read.xlsx() 函数来读取数据。\n# 载入必要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(openxlsx)\nfile = xfun::magic_path(\"20250418-combined.xlsx\")\n我们将使用 read.xlsx() 函数来读取 Excel 文件。文件名为 20250418-combined.xlsx。这里，我们使用 xfun::magic_path() 函数来获取文件的路径。magic_path() 函数会自动处理文件路径的问题，确保在路径复杂的情况下也能正确找到相应的文件。\n文件包含多个工作表（sheet），我们将依次读取每个工作表的数据。",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#载入包",
+    "href": "02-shix/data-preprocess.html#载入包",
+    "title": "4  数据预处理",
+    "section": "",
+    "text": "filter() 用于筛选数据。\nmutate() 用于添加或修改数据框中的列。\nselect() 用于选择数据框中的列。\nrename() 用于重命名数据框中的列。\npivot_longer() 用于将数据框从宽格式转换为长格式。\n\n\n\n\n\n\nSheet 1：3月24日 的茎长和出芽率等数据；\nSheet 2：4月1日 的鲜重和蛋白测量数据；\nSheet 3：std curve，测量蛋白质浓度的标准曲线数据；\nSheet 4：4月1日6组 的根、第 1 -3 片叶、以及根的蛋白质测量数据；\nSheet 5：酶标仪结果，测量蛋白质浓度时的酶标仪读数。",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#合成菌群的编号和组成",
+    "href": "02-shix/data-preprocess.html#合成菌群的编号和组成",
+    "title": "4  数据预处理",
+    "section": "4.2 合成菌群的编号和组成",
+    "text": "4.2 合成菌群的编号和组成\n首先，我们来读取合成菌群的编号和组成。我们将使用 read.xlsx() 函数来读取 Excel 文件中的第二个工作表（sheet）的前 181 行和前两列的数据。我们将使用 as_tibble() 函数将数据转换为数据框，并使用 unique() 函数去除重复的行。从而得到唯一的合成菌群编号和组成。\n\nrawdata_syncom = read.xlsx(file, sheet = 2, rows = 1:181, cols = 1:2) |&gt; \n  as_tibble() |&gt;\n  unique() |&gt;\n  select(2, 1)\ncolnames(rawdata_syncom) = c('syncom_id','syncom_composition')\n\n一共有 45 个合成菌群，分别是：\n\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows\n\nkbl(rawdata_syncom)\n\n\n\n\nsyncom_id\nsyncom_composition\n\n\n\n\n1\nCK1/CK22/F19/G7/KF11\n\n\n2\nCK1/F19/G7/KF11\n\n\n3\nCK1/CK22/CMF9/CMF18/G5/KF11\n\n\n4\nCK1/CK22/F19/G7/\n\n\n5\nCK1/CK22/\n\n\n6\nCK1/CK22/CMF18/F19/G7/\n\n\n7\nCK1/CMF9/F19/G7/\n\n\n8\nCK1/F19/G7/\n\n\n9\nCK1/CK22/CMF9/F19/G7/KF11\n\n\n10\nCK1/CK22/CMF18/F19/KF11\n\n\n11\nCK1/CMF9/G5/G7/\n\n\n12\nCK1/CMF9/CMF18/G7/KF11\n\n\n13\nCK1/CK22/CMF18/KF11\n\n\n14\nCK1/CK22/CMF18/G7/\n\n\n15\nCMF9/CMF18/\n\n\n16\nCK1/CMF9/CMF18/G18/\n\n\n17\nCMF9/G5/G7/\n\n\n18\nCK22/F19/G7/\n\n\n19\nCMF9/CMF18/G5/KF11\n\n\n20\nCK1/CMF9/F19/G7/G18/KF11\n\n\n21\nCK1/CMF9/CMF18/F19/G5/KF11\n\n\n22\nCK1/CK22/G5/G18/\n\n\n23\nBlank\n\n\n24\nCK1/CMF9/CMF18/F19/G18/\n\n\n25\nCK1/CK22/CMF18/F19/G7/G18/KF11\n\n\n26\nCK1/G7/KF11\n\n\n27\nCK1/CK22/G7/KF11\n\n\n28\nCK1/CK22/CMF9/F19/G5/G7/G18/\n\n\n29\nCMF18/G5/G7/G18/\n\n\n30\nCMF9/G18/KF11\n\n\n31\nCMF9/G5/G18/\n\n\n32\nCK22/CMF18/F19/\n\n\n33\nCMF9/CMF18/F19/G7/G18/KF11\n\n\n34\nCK22/CMF9/F19/G7/G18/KF11\n\n\n35\nCK1/CMF9/CMF18/F19/G7/\n\n\n36\nCK22/CMF18/F19/G5/G7/KF11\n\n\n37\nCK22/F19/G5/G7/G18/KF11\n\n\n38\nCK22/CMF18/G18/KF11\n\n\n39\nCK22/G5/\n\n\n40\nCK1/CK22/F19/G5/KF11\n\n\n41\nCMF9/CMF18/F19/G5/G7/KF11\n\n\n42\nCMF18/F19/G7/KF11\n\n\n43\nCMF18/F19/G7/\n\n\n44\nCK1/CMF18/F19/G7/\n\n\n45\nCMF9/F19/G5/\n\n\n\n\n\n\n\n将数据保存到 CSV 文件中。文件名为 20250418-syncom-composition.csv，使用 write_csv() 函数来保存数据。\n\nwrite_csv(rawdata_syncom, \"data/20250418-syncom-composition.csv\")",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#株高茎长",
+    "href": "02-shix/data-preprocess.html#株高茎长",
+    "title": "4  数据预处理",
+    "section": "4.3 株高/茎长",
+    "text": "4.3 株高/茎长\n合成菌群对玉米茎长的影响数据保存在 Excel 文件的第一个工作表（sheet）中。我们将使用 read.xlsx() 函数来读取数据，并使用 as_tibble() 函数将数据转换为数据框。同时，我们将使用 colnames() 函数来修改列名。新的列名包括：syncom_id、len_1、len_2、len_3 和 len_4。这些列分别表示合成菌群的编号和四个重复的茎长测量值。\n\n# 读取数据\nrawdata_shoot_len = read.xlsx(file, sheet = 1, rows = 1:46, cols = 1:5) |&gt;\n  as_tibble()\ncolnames(rawdata_shoot_len) = c('syncom_id','len_1','len_2','len_3','len_4')\n\n接下来，使用 pivot_longer() 函数将数据从宽格式转换为长格式。我们将使用 starts_with(\"len\") 来选择以 len 开头的列，并将它们转换为两列：rep 和 shoot_len。同时，我们将使用 left_join() 函数将合成菌群的编号和组成信息添加到数据框中。\n\nrawdata_shoot_len = rawdata_shoot_len |&gt; \n  pivot_longer(cols = starts_with(\"len\"), \n               names_to = \"rep\", \n               values_to = \"shoot_len\") |&gt; \n  left_join(rawdata_syncom)\n\nJoining with `by = join_by(syncom_id)`\n\n\n接下来，我们将使用 group_by() 函数按 syncom_id 列分组，然后使用 summarise() 函数来计算平均值和标准差。最后，我们将使用 mutate() 函数将平均值和标准差合并为一个字符串，并使用 select() 函数来选择需要的列。最后，将结果输出为表格 Table 4.1。\n\n# 计算每个合成菌群的平均茎长和标准差\nrawdata_shoot_len |&gt; \n  group_by(syncom_id) |&gt; \n  summarise(mean_shoot_len = mean(shoot_len, na.rm = TRUE),\n            std_shoot_len = sd(shoot_len, na.rm = TRUE)) |&gt; \n  ungroup() |&gt; \n  mutate(shoot_len = paste0(round(mean_shoot_len, 2), \" ± \", round(std_shoot_len, 2))) |&gt;\n  left_join(rawdata_syncom) |&gt;\n  select(syncom_id, syncom_composition, shoot_len)  |&gt;\n  kbl()\n\nJoining with `by = join_by(syncom_id)`\n\n\n\n\nTable 4.1: 合成菌群对玉米茎长的影响\n\n\n\n\n\n\nsyncom_id\nsyncom_composition\nshoot_len\n\n\n\n\n1\nCK1/CK22/F19/G7/KF11\n6.25 ± 0.71\n\n\n2\nCK1/F19/G7/KF11\n7.1 ± 0.98\n\n\n3\nCK1/CK22/CMF9/CMF18/G5/KF11\n5.22 ± 0.53\n\n\n4\nCK1/CK22/F19/G7/\n6.55 ± 0.87\n\n\n5\nCK1/CK22/\n6.5 ± 0.22\n\n\n6\nCK1/CK22/CMF18/F19/G7/\n5.72 ± 0.96\n\n\n7\nCK1/CMF9/F19/G7/\n6.72 ± 0.38\n\n\n8\nCK1/F19/G7/\n5.75 ± 0.83\n\n\n9\nCK1/CK22/CMF9/F19/G7/KF11\n6.45 ± 0.48\n\n\n10\nCK1/CK22/CMF18/F19/KF11\n6.18 ± 0.97\n\n\n11\nCK1/CMF9/G5/G7/\n6.53 ± 0.86\n\n\n12\nCK1/CMF9/CMF18/G7/KF11\n5.72 ± 0.46\n\n\n13\nCK1/CK22/CMF18/KF11\n4.9 ± 2.04\n\n\n14\nCK1/CK22/CMF18/G7/\n6.67 ± 0.29\n\n\n15\nCMF9/CMF18/\n7 ± 0.72\n\n\n16\nCK1/CMF9/CMF18/G18/\n6.8 ± 0.51\n\n\n17\nCMF9/G5/G7/\n6.5 ± 0.36\n\n\n18\nCK22/F19/G7/\n6.05 ± 0.59\n\n\n19\nCMF9/CMF18/G5/KF11\n6.47 ± 0.39\n\n\n20\nCK1/CMF9/F19/G7/G18/KF11\n6.9 ± 0.24\n\n\n21\nCK1/CMF9/CMF18/F19/G5/KF11\n6.1 ± 1.06\n\n\n22\nCK1/CK22/G5/G18/\n6.8 ± 0.22\n\n\n23\nBlank\n6.4 ± 0.4\n\n\n24\nCK1/CMF9/CMF18/F19/G18/\n6.58 ± 0.5\n\n\n25\nCK1/CK22/CMF18/F19/G7/G18/KF11\n5.12 ± 1.27\n\n\n26\nCK1/G7/KF11\n5.85 ± 0.79\n\n\n27\nCK1/CK22/G7/KF11\n6.97 ± 0.75\n\n\n28\nCK1/CK22/CMF9/F19/G5/G7/G18/\n7.62 ± 0.47\n\n\n29\nCMF18/G5/G7/G18/\n6.22 ± 0.93\n\n\n30\nCMF9/G18/KF11\n7.18 ± 0.77\n\n\n31\nCMF9/G5/G18/\n6 ± 1.41\n\n\n32\nCK22/CMF18/F19/\n6.85 ± 0.75\n\n\n33\nCMF9/CMF18/F19/G7/G18/KF11\n6.58 ± 0.32\n\n\n34\nCK22/CMF9/F19/G7/G18/KF11\n6.22 ± 1.18\n\n\n35\nCK1/CMF9/CMF18/F19/G7/\n6.85 ± 0.62\n\n\n36\nCK22/CMF18/F19/G5/G7/KF11\n6.47 ± 0.39\n\n\n37\nCK22/F19/G5/G7/G18/KF11\n6.1 ± 0.91\n\n\n38\nCK22/CMF18/G18/KF11\n6.12 ± 0.49\n\n\n39\nCK22/G5/\n6.25 ± 0.3\n\n\n40\nCK1/CK22/F19/G5/KF11\n6.5 ± 0.73\n\n\n41\nCMF9/CMF18/F19/G5/G7/KF11\n5.47 ± 0.22\n\n\n42\nCMF18/F19/G7/KF11\n6.55 ± 0.7\n\n\n43\nCMF18/F19/G7/\n6.62 ± 0.6\n\n\n44\nCK1/CMF18/F19/G7/\n5.88 ± 0.91\n\n\n45\nCMF9/F19/G5/\n6.35 ± 0.24\n\n\n\n\n\n\n\n\n\n\n接下来，我们将数据保存到 CSV 文件中。文件名为 20250418-shoot-len.csv，使用 write_csv() 函数来保存数据。\n\nwrite_csv(rawdata_shoot_len, \"data/20250418-shoot-len.csv\")",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#发芽率",
+    "href": "02-shix/data-preprocess.html#发芽率",
+    "title": "4  数据预处理",
+    "section": "4.4 发芽率",
+    "text": "4.4 发芽率\n合成菌群对玉米发芽率的影响数据保存在 Excel 文件的第一个工作表（sheet）中。我们将使用 read.xlsx() 函数来读取数据，并使用 as_tibble() 函数将数据转换为数据框。同时，我们将使用 colnames() 函数来修改列名。新的列名包括：syncom_id、num_germ 和 germ_rate。这些列分别表示合成菌群的编号、发芽的数量和发芽率。\n\n# 读取数据\nrawdata_germ_rate = read.xlsx(file, sheet = 1, rows = 1:46, cols = c(1,7:8)) |&gt;\n  as_tibble()\ncolnames(rawdata_shoot_len) = c('syncom_id','num_germ', 'germ_rate')\n\n\nkbl(rawdata_germ_rate)\n\n\n\nTable 4.2: 合成菌群对玉米发芽率的影响\n\n\n\n\n\n\n序号\n出芽数（个）\n出芽率\n\n\n\n\n1\n5\n0.8333333\n\n\n2\n6\n1.0000000\n\n\n3\n5\n0.8333333\n\n\n4\n6\n1.0000000\n\n\n5\n6\n1.0000000\n\n\n6\n6\n1.0000000\n\n\n7\n6\n1.0000000\n\n\n8\n5\n0.8333333\n\n\n9\n6\n1.0000000\n\n\n10\n6\n1.0000000\n\n\n11\n5\n0.8333333\n\n\n12\n6\n1.0000000\n\n\n13\n4\n0.6666667\n\n\n14\n6\n1.0000000\n\n\n15\n6\n1.0000000\n\n\n16\n6\n1.0000000\n\n\n17\n6\n1.0000000\n\n\n18\n6\n1.0000000\n\n\n19\n6\n1.0000000\n\n\n20\n5\n0.8333333\n\n\n21\n6\n1.0000000\n\n\n22\n6\n1.0000000\n\n\n23\n6\n1.0000000\n\n\n24\n6\n1.0000000\n\n\n25\n6\n1.0000000\n\n\n26\n5\n0.8333333\n\n\n27\n6\n1.0000000\n\n\n28\n6\n1.0000000\n\n\n29\n6\n1.0000000\n\n\n30\n6\n1.0000000\n\n\n31\n5\n0.8333333\n\n\n32\n6\n1.0000000\n\n\n33\n6\n1.0000000\n\n\n34\n5\n0.8333333\n\n\n35\n6\n1.0000000\n\n\n36\n6\n1.0000000\n\n\n37\n6\n1.0000000\n\n\n38\n5\n0.8333333\n\n\n39\n6\n1.0000000\n\n\n40\n6\n1.0000000\n\n\n41\n6\n1.0000000\n\n\n42\n6\n1.0000000\n\n\n43\n6\n1.0000000\n\n\n44\n6\n1.0000000\n\n\n45\n6\n1.0000000",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#标准曲线",
+    "href": "02-shix/data-preprocess.html#标准曲线",
+    "title": "4  数据预处理",
+    "section": "4.5 标准曲线",
+    "text": "4.5 标准曲线\n这一部分，我们将读取标准曲线的数据。标准曲线的数据存储在 Excel 文件的第三个工作表（sheet）中。我们将使用 read.xlsx() 函数来读取数据，并使用 as_tibble() 函数将数据转换为数据框。同时，我们将使用 colnames() 函数来修改列名。新的列名包括：protein_conc 和 absorbance。\n\nstd_curve = read.xlsx(file, sheet = 3, rows = 1:7, cols = 1:2) |&gt;\n  as_tibble()\ncolnames(std_curve) = c('protein_conc','absorbance')\n\n接下来，使用 lm() 函数来拟合标准曲线。我们将使用 absorbance 列作为自变量，protein_conc 列作为因变量。拟合的结果将存储在 model 对象中。我们可以使用 summary() 函数来查看拟合的结果。\n\n# 拟合标准曲线\nmodel = lm(protein_conc ~ absorbance, data = std_curve)\nsummary(model)\n\n\nCall:\nlm(formula = protein_conc ~ absorbance, data = std_curve)\n\nResiduals:\n       1        2        3        4        5        6 \n-0.02559 -0.01174  0.12827 -0.02711 -0.03595 -0.02788 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  -2.0710     0.1747  -11.85  0.00029 ***\nabsorbance    3.8462     0.2403   16.01  8.9e-05 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.0708 on 4 degrees of freedom\nMultiple R-squared:  0.9846,    Adjusted R-squared:  0.9808 \nF-statistic: 256.3 on 1 and 4 DF,  p-value: 8.903e-05\n\n\n下一步，我们将使用 ggplot2 包来绘制标准曲线。我们将使用 geom_point() 函数来绘制散点图，使用 geom_abline() 函数来添加拟合的直线，并使用 annotate() 函数来添加文本注释。最后，我们将使用 labs() 函数来添加坐标轴标签。\n\n# 设置默认主题\ntheme_set(theme_bw())\n\n# 绘制标准曲线\nggplot(std_curve, aes(x = absorbance, y = protein_conc)) +\n  geom_point() +\n  geom_abline(intercept = model$coefficients[1], \n              slope = model$coefficients[2], \n              color = \"red\",\n              lty = \"dashed\") +\n  annotate(geom = \"text\", \n           label = paste0(\"y = \", round(model$coefficients[2], 2), \"x + \", round(model$coefficients[1], 2)), \n            x = 0.8, y = 1.3) +\n  annotate(geom = \"text\", \n           label = paste0(\"R² = \", round(summary(model)$r.squared, 2)),\n           x = 0.8, y = 1.25) +\n  labs(x = \"Absorbance (590 nm)\", y = \"Protein Concentration (mg/mL)\")\n\n\n\n\n\n\n\nFigure 4.1: 使用考马斯亮蓝染色法测定蛋白质浓度的标准曲线",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#植株鲜重",
+    "href": "02-shix/data-preprocess.html#植株鲜重",
+    "title": "4  数据预处理",
+    "section": "4.6 植株鲜重",
+    "text": "4.6 植株鲜重\n植株鲜重数据保存在 Excel 文件的第二个工作表（sheet）中。我们将使用 read.xlsx() 函数来读取数据，并使用 as_tibble() 函数将数据转换为数据框。同时，我们将使用 colnames() 函数来修改列名。新的列名包括：syncom_composition、syncom、rep、fresh_weight_total、fresh_weight_above、fresh_weight_below 和 fresh_weight_first_leaf。这些列分别表示合成菌群的组成、编号、重复次数、整株鲜重、地上部鲜重、地下部鲜重和第一片叶的鲜重。\n\nfresh_weight = read.xlsx(file, sheet = 2, rows = 1:181, cols = 1:7) |&gt;\n  as_tibble()\ncolnames(fresh_weight) = c('syncom_composition','syncom_id','rep','fresh_weight_total','fresh_weight_above','fresh_weight_below','fresh_weight_first_leaf')\n\nwrite_csv(fresh_weight, \"data/20250418-fresh-weight.csv\")",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#第一片叶的蛋白质含量",
+    "href": "02-shix/data-preprocess.html#第一片叶的蛋白质含量",
+    "title": "4  数据预处理",
+    "section": "4.7 第一片叶的蛋白质含量",
+    "text": "4.7 第一片叶的蛋白质含量\n\nprotein_first_leaf = read.xlsx(file, sheet = 2, rows = 1:181, cols = c(1:3, 7:12)) |&gt;\n  as_tibble()\ncolnames(protein_first_leaf) = c('syncom_composition','syncom_id','rep','weight_first_leaf','weight_sample', 'absorbance','protein_conc_ml','protein_conc_g','protein_content')\n\nprotein_first_leaf\n\n# A tibble: 180 × 9\n   syncom_composition syncom_id   rep weight_first_leaf weight_sample absorbance\n   &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;\n 1 CK1/CK22/F19/G7/K…         1     1             0.184         0.101      0.666\n 2 CK1/CK22/F19/G7/K…         1     2             0.176         0.104      0.661\n 3 CK1/CK22/F19/G7/K…         1     3             0.134         0.103      0.720\n 4 CK1/CK22/F19/G7/K…         1     4             0.103         0.103      0.690\n 5 CK1/F19/G7/KF11            2     1             0.164         0.102      0.677\n 6 CK1/F19/G7/KF11            2     2             0.158         0.097      0.668\n 7 CK1/F19/G7/KF11            2     3             0.15          0.103      0.775\n 8 CK1/F19/G7/KF11            2     4             0.124         0.102      0.721\n 9 CK1/CK22/CMF9/CMF…         3     1             0.15          0.102      0.724\n10 CK1/CK22/CMF9/CMF…         3     2             0.195         0.104      0.666\n# ℹ 170 more rows\n# ℹ 3 more variables: protein_conc_ml &lt;dbl&gt;, protein_conc_g &lt;dbl&gt;,\n#   protein_content &lt;dbl&gt;\n\n\n\n\n\n\n\n\nWarning\n\n\n\nExcel 文档中，在计算取自第一片叶的样品的蛋白质浓度的时候，使用了错误的公式。错误的公式以蛋白质含量为自变量，以吸光值为因变量。而正确的公式应该是以吸光值为自变量，以蛋白质浓度为因变量。\n前面我们已经使用 lm() 函数来拟合线性模型，接下来则可以使用 predict() 函数来预测蛋白质浓度。这里我们将使用 absorbance_ 列作为自变量，protein_conc_ml 列作为因变量。\n\n\n\n# 拟合线性模型\nprotein_conc = predict(model, newdata = protein_first_leaf)\n\nprotein_first_leaf$protein_conc_ml = protein_conc\nprotein_first_leaf$protein_conc_g = protein_conc * 1 / protein_first_leaf$weight_sample\n\n# 计算蛋白质含量\nprotein_first_leaf$protein_content = protein_first_leaf$protein_conc_g * protein_first_leaf$weight_first_leaf\n\n\nprotein_first_leaf |&gt; \n  select(syncom_id, syncom_composition, rep, protein_conc_g, protein_content) |&gt; \n  write_csv(\"data/20250418-protein-first-leaf.csv\")",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-preprocess.html#植株不同部分的蛋白质含量",
+    "href": "02-shix/data-preprocess.html#植株不同部分的蛋白质含量",
+    "title": "4  数据预处理",
+    "section": "4.8 植株不同部分的蛋白质含量",
+    "text": "4.8 植株不同部分的蛋白质含量\n植株不同部分的蛋白质含量数据保存在 Excel 文件的第四个工作表（sheet）中。可分为根、第一片叶、第二片叶、第三片叶和茎。\n这里，我们依次读取每个部分的测试数据。使用 select() 函数选择需要的列，使用 rename() 函数修改列名，使用 mutate() 函数添加新的列 part。最后，我们将所有部分的数据合并成一个数据框。\n\nprotein_all = read.xlsx(file, sheet = 4)\n\nprotein_root = protein_all |&gt; \n  select(2:3, 6:8) |&gt; \n  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |&gt; \n  mutate(part = \"root\", .after = 1)\n\nprotein_first_leaf = protein_all |&gt;\n  select(2:3, 12:14) |&gt; \n  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |&gt; \n  mutate(part = \"first_leaf\", .after = 1)\n\nprotein_second_leaf = protein_all |&gt;\n  select(2:3, 18:20) |&gt; \n  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |&gt; \n  mutate(part = \"second_leaf\", .after = 1)\n\nprotein_third_leaf = protein_all |&gt;\n  select(2:3, 24:26) |&gt; \n  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |&gt; \n  mutate(part = \"third_leaf\", .after = 1)\n\nprotein_stem = protein_all |&gt;\n  select(2:3, 30:32) |&gt; \n  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |&gt; \n  mutate(part = \"stem\", .after = 1)\n\nprotein_all_parts = protein_root |&gt; \n  bind_rows(protein_stem) |&gt; \n  bind_rows(protein_first_leaf) |&gt; \n  bind_rows(protein_second_leaf) |&gt; \n  bind_rows(protein_third_leaf) |&gt; \n  as_tibble()\n\n接下来，使用 mutate() 函数添加新的列 protein_conc_ml、protein_conc_g 和 protein_content。其中，protein_conc_ml 列表示蛋白质浓度（mg/mL），protein_conc_g 列表示蛋白质浓度（mg/g），protein_content 列表示蛋白质含量（mg）。\n\nprotein_all_parts = protein_all_parts |&gt;\n  mutate(protein_conc_ml = predict(model, newdata = protein_all_parts)) |&gt; \n  mutate(protein_conc_g = protein_conc_ml * 1 / weight_sample) |&gt; \n  mutate(protein_content = protein_conc_g * weight_total) |&gt; \n  select(syncom_id, part, rep, protein_conc_g, protein_content)\n\n最后，我们将数据保存到 CSV 文件中。文件名为 20250418-protein-all-parts.csv，使用 write_csv() 函数来保存数据。\n\nprotein_all_parts |&gt;\n  write_csv(\"data/20250418-protein-all-parts.csv\")",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html",
+    "href": "02-shix/data-analysis.html",
+    "title": "5  数据分析",
+    "section": "",
+    "text": "5.1 载入需要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(ggpubr)\nlibrary(showtext)\n\nLoading required package: sysfonts\nLoading required package: showtextdb\n\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows\n\ntheme_set(theme_bw())\nshowtext_auto()",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#对玉米株高的影响",
+    "href": "02-shix/data-analysis.html#对玉米株高的影响",
+    "title": "5  数据分析",
+    "section": "5.2 对玉米株高的影响",
+    "text": "5.2 对玉米株高的影响\n下面，我们将分析合成菌群对玉米株高的影响。我们将使用箱线图来展示不同合成菌群对玉米株高的影响。\n\n# 指定数据文件路径\nfile = xfun::magic_path(\"20250418-shoot-len.csv\")\n\n# 读取数据\nshoot_len = read_csv(file) |&gt; \n  mutate(syncom_id = as_factor(syncom_id))\n\nRows: 180 Columns: 4\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): rep, syncom_composition\ndbl (2): syncom_id, shoot_len\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n# 绘制箱线图\nggplot(shoot_len, aes(x = syncom_composition, y = shoot_len)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on shoot length\",\n       x = \"Synthetic community\",\n       y = \"Shoot length (cm)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.1: 合成菌群对玉米株高的影响",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#对玉米植株鲜重的影响",
+    "href": "02-shix/data-analysis.html#对玉米植株鲜重的影响",
+    "title": "5  数据分析",
+    "section": "5.3 对玉米植株鲜重的影响",
+    "text": "5.3 对玉米植株鲜重的影响\n接下来，我们将分析合成菌群对玉米植株鲜重的影响。我们将使用箱线图来展示不同合成菌群对玉米植株鲜重的影响。\n\nfile = xfun::magic_path(\"20250418-fresh-weight.csv\")\nfresh_weight = read_csv(file) |&gt; \n  mutate(syncom_id = as_factor(syncom_id))\n\nRows: 180 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (1): syncom_composition\ndbl (6): syncom_id, rep, fresh_weight_total, fresh_weight_above, fresh_weigh...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n5.3.1 对玉米整株鲜重的影响\n首先，我们将分析合成菌群对玉米整株鲜重的影响。\n\nggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_total)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on whole plant biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.2: 合成菌群玉米植株鲜重的影响\n\n\n\n\n\n\n\n5.3.2 对玉米地上部鲜重的影响\n其次，我们将分析合成菌群对玉米地上部鲜重的影响。\n\nggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_above)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on shoot biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.3: 合成菌群玉米地上部鲜重的影响\n\n\n\n\n\n\n\n5.3.3 对玉米地下部鲜重的影响\n最后，我们将分析合成菌群对玉米地下部鲜重的影响。\n\nggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_below)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on root biomass\",\n       x = \"Synthetic community\",\n       y = \"Fresh weight (g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.4: 合成菌群玉米地下部鲜重的影响",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#对第一片叶片蛋白质含量的影响",
+    "href": "02-shix/data-analysis.html#对第一片叶片蛋白质含量的影响",
+    "title": "5  数据分析",
+    "section": "5.4 对第一片叶片蛋白质含量的影响",
+    "text": "5.4 对第一片叶片蛋白质含量的影响\n这一部分，我们将分析合成菌群对玉米第一片叶片蛋白质积累的影响。\n\nfile = xfun::magic_path(\"20250418-protein-first-leaf.csv\")\nprotein_first_leaf = read_csv(file) |&gt; \n  mutate(syncom_id = as_factor(syncom_id))\n\nRows: 180 Columns: 5\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (1): syncom_composition\ndbl (4): syncom_id, rep, protein_conc_g, protein_content\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n5.4.1 对玉米第一片叶片蛋白质含量的影响\n接下来，我们将分析合成菌群对玉米第一片叶片蛋白质含量的影响。蛋白质含量表示为每克叶片中蛋白质的浓度。\n\nggplot(protein_first_leaf, aes(x = syncom_composition, y = protein_conc_g)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on first leaf protein concentration\",\n       x = \"Synthetic community\",\n       y = \"Protein concentration (mg/g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.5: 合成菌群对玉米第一片叶片蛋白质含量的影响\n\n\n\n\n\n\n\n5.4.2 对玉米第一片叶片蛋白质总量的影响\n最后，我们将分析合成菌群对玉米第一片叶片蛋白质总量的影响。蛋白质总量表示为第一片叶片中蛋白质的总量（mg）。\n\nggplot(protein_first_leaf, aes(x = syncom_composition, y = protein_content)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on first leaf protein content\",\n       x = \"Synthetic community\",\n       y = \"Protein content (mg)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 40))\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\nWarning: Removed 1 row containing non-finite outside the scale range\n(`stat_compare_means()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\nFigure 5.6: 合成菌群对玉米第一片叶片蛋白质总量的影响",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#玉米植株不同部位的蛋白质含量",
+    "href": "02-shix/data-analysis.html#玉米植株不同部位的蛋白质含量",
+    "title": "5  数据分析",
+    "section": "5.5 玉米植株不同部位的蛋白质含量",
+    "text": "5.5 玉米植株不同部位的蛋白质含量\n在这一部分，我们将分析合成菌群对玉米植株不同部位蛋白质含量的影响。\n\nfile = xfun::magic_path(\"20250418-protein-all-parts.csv\")\nprotein_all_parts = read_csv(file) |&gt; \n  mutate(syncom_id = as_factor(syncom_id),\n         part = factor(part, levels = c(\"root\",\"stem\",\"first_leaf\",\"second_leaf\",\"third_leaf\")))\n\nRows: 120 Columns: 5\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (1): part\ndbl (4): syncom_id, rep, protein_conc_g, protein_content\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n5.5.1 玉米不同部位蛋白质含量的差异\n在这一部分，我们将分析玉米不同部位蛋白质含量的差异。\n\nggplot(protein_all_parts, aes(x = part, y = protein_conc_g)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"wilcox.test\", \n                     comparisons = list(c(\"root\", \"stem\"), c(\"stem\", \"first_leaf\"), c(\"first_leaf\", \"second_leaf\"), c(\"second_leaf\", \"third_leaf\"), c(\"first_leaf\", \"third_leaf\")),\n                     label = \"p\", \n                     hide.ns = TRUE) +\n  labs(title = \"Seedling protein concentration in different parts\",\n       x = \"Plant part\",\n       y = \"Protein concentration (mg/g)\") \n\nWarning in wilcox.test.default(c(1.87000887107087, 1.55952724227578,\n2.23550437466064, : cannot compute exact p-value with ties\n\n\nWarning in wilcox.test.default(c(2.57723111962803, 2.17876827989778,\n2.0530896981845, : cannot compute exact p-value with ties\n\n\n\n\n\n\n\n\nFigure 5.7: 玉米不同部位蛋白质含量的差异",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#玉米不同部位蛋白质总量的差异",
+    "href": "02-shix/data-analysis.html#玉米不同部位蛋白质总量的差异",
+    "title": "5  数据分析",
+    "section": "5.6 玉米不同部位蛋白质总量的差异",
+    "text": "5.6 玉米不同部位蛋白质总量的差异\n在这一部分，我们将分析合成菌群对玉米植株不同部位蛋白质总量的影响。\n\nggplot(protein_all_parts, aes(x = part, y = protein_content)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"wilcox.test\", \n                     comparisons = list(c(\"root\", \"stem\"), c(\"stem\", \"first_leaf\"), c(\"first_leaf\", \"second_leaf\"), c(\"second_leaf\", \"third_leaf\"), c(\"first_leaf\", \"third_leaf\")),\n                     label = \"p\", \n                     hide.ns = TRUE) +\n  labs(title = \"Seedling protein content in different parts\",\n       x = \"Plant part\",\n       y = \"Protein content (mg)\")\n\n\n\n\n\n\n\nFigure 5.8: 玉米不同部位蛋白质总量的差异",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "02-shix/data-analysis.html#合成菌群对植株蛋白质总量的影响",
+    "href": "02-shix/data-analysis.html#合成菌群对植株蛋白质总量的影响",
+    "title": "5  数据分析",
+    "section": "5.7 合成菌群对植株蛋白质总量的影响",
+    "text": "5.7 合成菌群对植株蛋白质总量的影响\n在这一部分，我们将分析合成菌群对玉米植株蛋白质总量的影响。我们将使用箱线图来展示不同合成菌群对玉米植株蛋白质总量的影响。\n\nsyncom_composition = read_csv(xfun::magic_path(\"20250418-syncom-composition.csv\")) |&gt; \n  mutate(syncom_id = as_factor(syncom_id))\n\nRows: 45 Columns: 2\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (1): syncom_composition\ndbl (1): syncom_id\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\nprotein_all = protein_all_parts |&gt; \n  group_by(syncom_id, rep) |&gt; \n  summarize(protein_content = sum(protein_content)) |&gt;\n  ungroup() |&gt;\n  mutate(syncom_id = as_factor(syncom_id)) |&gt;\n  left_join(syncom_composition)\n\n`summarise()` has grouped output by 'syncom_id'. You can override using the\n`.groups` argument.\nJoining with `by = join_by(syncom_id)`\n\nggplot(protein_all, aes(x = syncom_composition, y = protein_content)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(width = 0.2, alpha = 0.5) +\n  stat_compare_means(method = \"t.test\", \n                     ref.group = \"Blank\", \n                     label = \"p.signif\", \n                     hide.ns = TRUE) +\n  labs(title = \"Effect of synthetic community on third leaf protein concentration\",\n       x = \"Synthetic community\",\n       y = \"Protein concentration (mg/g)\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1),\n        plot.margin = margin(l = 30))\n\n\n\n\n\n\n\nFigure 5.9: 合成菌群对植株蛋白质总量的影响",
+    "crumbs": [
+      "Student No. 2",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html",
+    "href": "03-zyt/data-preprocess.html",
+    "title": "6  数据预处理",
+    "section": "",
+    "text": "6.1 载入包\n首先，载入需要用到的包。\ntidyverse 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。\n在这里，我们即将用到 dplyr 包中的 filter()、mutate()、select() 和 pivot_longer() 函数，以及 tidyr 包中的 rename() 函数和 ggplot2 包中的 ggplot() 函数，readr 包中的 write_csv() 函数。\n使用 library(tidyverse) 可以一次性载入所有的包。\nopenxlsx 包用于读取 Excel 文件。我们将用到 read.xlsx() 函数来读取数据。\n# 载入必要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(openxlsx)\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#载入包",
+    "href": "03-zyt/data-preprocess.html#载入包",
+    "title": "6  数据预处理",
+    "section": "",
+    "text": "filter() 用于筛选数据。\nmutate() 用于添加或修改数据框中的列。\nselect() 用于选择数据框中的列。\nrename() 用于重命名数据框中的列。\npivot_longer() 用于将数据框从宽格式转换为长格式。",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#菌株清单",
+    "href": "03-zyt/data-preprocess.html#菌株清单",
+    "title": "6  数据预处理",
+    "section": "6.2 菌株清单",
+    "text": "6.2 菌株清单\n\nfile = xfun::magic_path(\"plate-layout.xlsx\")\nstrains = read.xlsx(file, rows = 1:2, colNames = FALSE) |&gt; \n  t() |&gt; \n  as_tibble() |&gt; \n  rename(strain_id = 1, strain_name = 2)  |&gt; \n  filter(str_detect(strain_id, \"^S\"))\n\n研究一共使用了 20 个菌株 Table 6.1。\n\nkbl(strains)\n\n\n\nTable 6.1: 菌株清单\n\n\n\n\n\n\nstrain_id\nstrain_name\n\n\n\n\nS1\nNJP10\n\n\nS2\nG7\n\n\nS3\nCMF9\n\n\nS4\nKF19\n\n\nS5\nG7d8\n\n\nS6\nNJP01\n\n\nS7\nCMF4\n\n\nS8\nG2\n\n\nS9\nNJP02\n\n\nS10\nG7dB\n\n\nS11\nNJP21\n\n\nS12\nG7dA\n\n\nS13\nCMF18\n\n\nS14\nNJP03\n\n\nS15\nCK1\n\n\nS16\nG8\n\n\nS17\nF27\n\n\nS18\nKF11\n\n\nS19\nF19\n\n\nS20\nG7d2",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#生成平板布局",
+    "href": "03-zyt/data-preprocess.html#生成平板布局",
+    "title": "6  数据预处理",
+    "section": "6.3 生成平板布局",
+    "text": "6.3 生成平板布局\n实验一种使用了 12 块 384 孔板，关于平板布局的信息存储在 plate-layout.xlsx 文件中。依据该文件，我们将生成所有平板中所有孔的处理信息。\n文件中指出的布板规则如下：\n\n每块平板有 384 个孔，分为 16 行和 24 列，12 块 384 孔板一共有 4608 个孔。\n每块平板的基础培养基为 SES、SES-Ultra 或 SES-Plus。基础培养基经过 20 个物种转化，得到了 60 种不同的养分枯竭培养基。每个平板上加入 5 种不同的转化后培养基，位于第 1-15 行中。\n每块平板接种 20 个菌株，分布在第 3-22 列中。\n其余的孔中添加空白培养基。\n\n\nbase_media = c(\"SES\", \"SES-Ultra\", \"SES-Plus\")\nplate_ids = paste0(\"ZHP\", 1:12)\n\n# 生成平板孔位信息\nplate_wells = tibble(\n  plate_id = rep(plate_ids, each = 384),\n  row = rep(rep(LETTERS[1:16], times = length(plate_ids), each = 24)),\n  col = rep(1:24, times = length(plate_ids) * 16)\n)\n\n# 按照平板 ID 分配每个平板的基础培养基\nplate_base_media = tibble(\n  plate_id = plate_ids,\n  base_medium = rep(base_media, each = 4)\n)\n\n# 按照 plate_id 和 row 分配每个平板中培养基的转化者\nplate_transformers = tibble(\n  plate_id = rep(plate_ids, each = 15),\n  row = rep(LETTERS[1:15], times = length(plate_ids)),\n  transformer = rep(rep(strains$strain_id, each = 3), times = 3)\n)\n\n# 按照 plate_id 和 col 分配每个平板中接种的菌株\ninoculations = tibble(\n  col = 1:24,\n  inoculation = c(\"blank\",\"blank\", strains$strain_id, \"blank\", \"blank\")\n)\n\n# 合并全部信息，生成平板布局\nplate_layout = plate_wells |&gt; \n  left_join(plate_base_media, by = \"plate_id\") |&gt; \n  left_join(plate_transformers, by = c(\"plate_id\", \"row\")) |&gt; \n  complete(plate_id, row, fill = list(transformer = \"blank\")) |&gt;\n  left_join(inoculations, by = \"col\") |&gt; \n  mutate(well = paste0(row, col)) |&gt; \n  select(plate_id, well, base_medium, transformer, inoculation)\n\nplate_layout\n\n# A tibble: 4,608 × 5\n   plate_id well  base_medium transformer inoculation\n   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      \n 1 ZHP1     A1    SES         S1          blank      \n 2 ZHP1     A2    SES         S1          blank      \n 3 ZHP1     A3    SES         S1          S1         \n 4 ZHP1     A4    SES         S1          S2         \n 5 ZHP1     A5    SES         S1          S3         \n 6 ZHP1     A6    SES         S1          S4         \n 7 ZHP1     A7    SES         S1          S5         \n 8 ZHP1     A8    SES         S1          S6         \n 9 ZHP1     A9    SES         S1          S7         \n10 ZHP1     A10   SES         S1          S8         \n# ℹ 4,598 more rows\n\n\n最终生成的平板布局信息存储在 plate_layout 数据框中。该数据框包含了平板 ID、孔位、基础培养基、转化者和接种菌株的信息。该数据框共有 4608 行数据。",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#读取酶标仪读数",
+    "href": "03-zyt/data-preprocess.html#读取酶标仪读数",
+    "title": "6  数据预处理",
+    "section": "6.4 读取酶标仪读数",
+    "text": "6.4 读取酶标仪读数\n酶标仪读数存储在 data/20250418/reads 文件夹中。文件名为平板 ID，所在的子文件为测量的时间。\n\nread_files = list.files(\"data/20250418/reads\", pattern = \"xlsx$\", full.names = TRUE, recursive = TRUE)\n\n一共有 96 个文件需要被读取。因为这些文件的结构都一样，所以这里写一个函数来读取这些文件。\n该函数的输入为文件名，输出为一个数据框，包含了平板 ID、孔位、时间和吸光度。\n\nread_absorbance = function(x){\n  openxlsx::read.xlsx(x, rows = 33:49, cols = 1:25) |&gt; \n  rename(row = 1) |&gt;\n  pivot_longer(cols = -row, names_to = \"col\", values_to = \"absorbance\") |&gt; \n  mutate(plate_id = str_remove(basename(x), \".xlsx\"),\n         time = str_extract(x, \"D[0-9]\"),\n         well = paste0(row, col)) |&gt; \n  select(plate_id, well, time, absorbance)\n}\n\n使用 lapply() 函数来读取所有的文件，并将它们合并成一个数据框。\n\nall_absorbance = lapply(read_files, read_absorbance) |&gt; bind_rows()\n\nall_absorbance\n\n# A tibble: 36,864 × 4\n   plate_id well  time  absorbance\n   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;\n 1 ZHP1     A1    D1        0.105 \n 2 ZHP1     A2    D1        0.104 \n 3 ZHP1     A3    D1        0.144 \n 4 ZHP1     A4    D1        0.106 \n 5 ZHP1     A5    D1        0.101 \n 6 ZHP1     A6    D1        0.0967\n 7 ZHP1     A7    D1        0.102 \n 8 ZHP1     A8    D1        0.0987\n 9 ZHP1     A9    D1        0.101 \n10 ZHP1     A10   D1        0.0987\n# ℹ 36,854 more rows",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#生长数据合并",
+    "href": "03-zyt/data-preprocess.html#生长数据合并",
+    "title": "6  数据预处理",
+    "section": "6.5 生长数据合并",
+    "text": "6.5 生长数据合并\n将平板布局信息和酶标仪读数合并成一个数据框，同时将菌株 ID 转换为菌株名称，以便于后续分析。\n\nstrain2name = c(\"blank\", strains$strain_name)\nnames(strain2name) = c(\"blank\", strains$strain_id)\n\ngrowth_data = plate_layout |&gt; \n  left_join(all_absorbance, by = c(\"plate_id\", \"well\")) |&gt; \n  mutate(transformer = strain2name[transformer],\n         inoculation = strain2name[inoculation])\n\n最后，把实验数据保存到 data/20250418/growth-data.csv 文件中。\n\nwrite_csv(growth_data, \"data/20250418/growth-data.csv\")",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-preprocess.html#数据校验",
+    "href": "03-zyt/data-preprocess.html#数据校验",
+    "title": "6  数据预处理",
+    "section": "6.6 数据校验",
+    "text": "6.6 数据校验\n\n6.6.1 空白孔的吸光度\n\ngrowth_data |&gt; \n  mutate(isblank = (inoculation == \"blank\")) |&gt; \n  ggplot(aes(x = absorbance, color = isblank)) +\n  geom_density() +\n  labs(title = \"Absorbance of blank wells\",\n       x = \"Absorbance\",\n       y = \"Density\") +\n  scale_color_manual(values = c(\"black\", \"red\")) +\n  theme(legend.position = \"none\")",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-analysis.html",
+    "href": "03-zyt/data-analysis.html",
+    "title": "7  数据分析",
+    "section": "",
+    "text": "7.1 载入需要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(ggpubr)\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows\n\ntheme_set(theme_bw())",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-analysis.html#载入数据",
+    "href": "03-zyt/data-analysis.html#载入数据",
+    "title": "7  数据分析",
+    "section": "7.2 载入数据",
+    "text": "7.2 载入数据\n\nfile = xfun::magic_path(\"growth-data.csv\")\ndata = read_csv(file)\n\nRows: 36864 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (6): plate_id, well, base_medium, transformer, inoculation, time\ndbl (1): absorbance\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-analysis.html#在不同培养基中的生长情况",
+    "href": "03-zyt/data-analysis.html#在不同培养基中的生长情况",
+    "title": "7  数据分析",
+    "section": "7.3 在不同培养基中的生长情况",
+    "text": "7.3 在不同培养基中的生长情况\n首先，我们比较一下各个菌株在不同培养基中的生长情况。我们将使用 ggplot2 包中的 geom_boxplot() 函数来绘制箱线图，并使用 geom_jitter() 函数来添加散点图，以便更好地观察数据的分布情况。 我们将使用 stat_compare_means() 函数来添加统计显著性标记。该函数可以自动计算 p 值，并在图中添加显著性标记。\n这里，我们仅取了 D8 的数据进行比较。\n\ndata |&gt; \n  filter(time == \"D8\") |&gt;\n  ggplot(aes(inoculation, absorbance)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(aes(color = base_medium), alpha = 0.5, width = 0.2) +\n  facet_wrap(~ base_medium, ncol = 1) +\n  stat_compare_means(\n    ref.group = \"blank\",\n    method = \"wilcox.test\",\n    label = \"p.signif\",\n    hide.ns = TRUE,\n    label.y = 1.5,\n  ) +\n  labs(x = \"Inoculation\", y = \"Absorbance\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\nFigure 7.1: 各菌株在不同培养基中（共 60 种）的生长情况",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "03-zyt/data-analysis.html#生长曲线",
+    "href": "03-zyt/data-analysis.html#生长曲线",
+    "title": "7  数据分析",
+    "section": "7.4 生长曲线",
+    "text": "7.4 生长曲线\n这一部分，我们比较各个菌株在不同培养基中的生长曲线。\n\ndata |&gt; \n  filter(transformer != \"blank\", inoculation != \"blank\") |&gt;\n  summarize(\n    absorbance = median(absorbance),\n    .by = c(\"inoculation\", \"time\", \"base_medium\", \"transformer\")\n  ) |&gt; \n  mutate(time = as.numeric(str_extract(time, \"\\\\d+\")),\n         condition = paste0(base_medium, \"-\", transformer)) |&gt;\n  ggplot(aes(time, absorbance, color = inoculation)) +\n  geom_line() +\n  facet_wrap(~ condition, ncol = 10)\n\n\n\n\n\n\n\nFigure 7.2: 各菌株在不同培养基中（共 60 种）的生长曲线",
+    "crumbs": [
+      "Student No. 3",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "8  Summary",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]
