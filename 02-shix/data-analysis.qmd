@@ -1,0 +1,263 @@
+# 数据分析
+
+## 载入需要的包
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(showtext)
+library(kableExtra)
+
+theme_set(theme_bw())
+showtext_auto()
+```
+
+
+## 对玉米株高的影响
+
+下面，我们将分析合成菌群对玉米株高的影响。我们将使用箱线图来展示不同合成菌群对玉米株高的影响。
+
+```{r}
+#| label: fig-shoot-height
+#| fig-cap: 合成菌群对玉米株高的影响
+#| fig-width: 8
+
+# 指定数据文件路径
+file = xfun::magic_path("20250418-shoot-len.csv")
+
+# 读取数据
+shoot_len = read_csv(file) |> 
+  mutate(syncom_id = as_factor(syncom_id))
+
+# 绘制箱线图
+ggplot(shoot_len, aes(x = syncom_composition, y = shoot_len)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on shoot length",
+       x = "Synthetic community",
+       y = "Shoot length (cm)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+
+## 对玉米植株鲜重的影响
+
+接下来，我们将分析合成菌群对玉米植株鲜重的影响。我们将使用箱线图来展示不同合成菌群对玉米植株鲜重的影响。
+
+```{r}
+file = xfun::magic_path("20250418-fresh-weight.csv")
+fresh_weight = read_csv(file) |> 
+  mutate(syncom_id = as_factor(syncom_id))
+```
+
+
+### 对玉米整株鲜重的影响
+
+首先，我们将分析合成菌群对玉米整株鲜重的影响。
+
+```{r}
+#| label: fig-fresh-weight
+#| fig-cap: 合成菌群玉米植株鲜重的影响
+#| fig-width: 8
+
+ggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_total)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on whole plant biomass",
+       x = "Synthetic community",
+       y = "Fresh weight (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+### 对玉米地上部鲜重的影响
+
+其次，我们将分析合成菌群对玉米地上部鲜重的影响。
+
+```{r}
+#| label: fig-fresh-weight-above
+#| fig-cap: 合成菌群玉米地上部鲜重的影响
+#| fig-width: 8
+ggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_above)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on shoot biomass",
+       x = "Synthetic community",
+       y = "Fresh weight (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+
+### 对玉米地下部鲜重的影响
+
+最后，我们将分析合成菌群对玉米地下部鲜重的影响。
+
+```{r}
+#| label: fig-fresh-weight-below
+#| fig-cap: 合成菌群玉米地下部鲜重的影响
+#| fig-width: 8
+ggplot(fresh_weight, aes(x = syncom_composition, y = fresh_weight_below)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on root biomass",
+       x = "Synthetic community",
+       y = "Fresh weight (g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+## 对第一片叶片蛋白质含量的影响
+
+这一部分，我们将分析合成菌群对玉米第一片叶片蛋白质积累的影响。
+
+```{r}
+file = xfun::magic_path("20250418-protein-first-leaf.csv")
+protein_first_leaf = read_csv(file) |> 
+  mutate(syncom_id = as_factor(syncom_id))
+```
+
+
+### 对玉米第一片叶片蛋白质含量的影响
+
+接下来，我们将分析合成菌群对玉米第一片叶片蛋白质含量的影响。蛋白质含量表示为每克叶片中蛋白质的浓度。
+
+```{r}
+#| label: fig-protein-first-leaf
+#| fig-cap: 合成菌群对玉米第一片叶片蛋白质含量的影响
+#| fig-width: 8
+ggplot(protein_first_leaf, aes(x = syncom_composition, y = protein_conc_g)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on first leaf protein concentration",
+       x = "Synthetic community",
+       y = "Protein concentration (mg/g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+### 对玉米第一片叶片蛋白质总量的影响
+
+最后，我们将分析合成菌群对玉米第一片叶片蛋白质总量的影响。蛋白质总量表示为第一片叶片中蛋白质的总量（mg）。
+
+```{r}
+#| label: fig-protein-first-leaf-total
+#| fig-cap: 合成菌群对玉米第一片叶片蛋白质总量的影响
+#| fig-width: 8
+ggplot(protein_first_leaf, aes(x = syncom_composition, y = protein_content)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on first leaf protein content",
+       x = "Synthetic community",
+       y = "Protein content (mg)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 40))
+```
+
+## 玉米植株不同部位的蛋白质含量
+
+在这一部分，我们将分析合成菌群对玉米植株不同部位蛋白质含量的影响。
+
+```{r}
+file = xfun::magic_path("20250418-protein-all-parts.csv")
+protein_all_parts = read_csv(file) |> 
+  mutate(syncom_id = as_factor(syncom_id),
+         part = factor(part, levels = c("root","stem","first_leaf","second_leaf","third_leaf")))
+```
+
+### 玉米不同部位蛋白质含量的差异
+
+在这一部分，我们将分析玉米不同部位蛋白质含量的差异。
+
+```{r}
+#| label: fig-protein-all-parts
+#| fig-cap: 玉米不同部位蛋白质含量的差异
+ggplot(protein_all_parts, aes(x = part, y = protein_conc_g)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "wilcox.test", 
+                     comparisons = list(c("root", "stem"), c("stem", "first_leaf"), c("first_leaf", "second_leaf"), c("second_leaf", "third_leaf"), c("first_leaf", "third_leaf")),
+                     label = "p", 
+                     hide.ns = TRUE) +
+  labs(title = "Seedling protein concentration in different parts",
+       x = "Plant part",
+       y = "Protein concentration (mg/g)") 
+```
+
+
+## 玉米不同部位蛋白质总量的差异
+
+在这一部分，我们将分析合成菌群对玉米植株不同部位蛋白质总量的影响。
+
+```{r}
+#| label: fig-protein-all-parts-total
+#| fig-cap: 玉米不同部位蛋白质总量的差异
+ggplot(protein_all_parts, aes(x = part, y = protein_content)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "wilcox.test", 
+                     comparisons = list(c("root", "stem"), c("stem", "first_leaf"), c("first_leaf", "second_leaf"), c("second_leaf", "third_leaf"), c("first_leaf", "third_leaf")),
+                     label = "p", 
+                     hide.ns = TRUE) +
+  labs(title = "Seedling protein content in different parts",
+       x = "Plant part",
+       y = "Protein content (mg)")
+```
+
+
+## 合成菌群对植株蛋白质总量的影响
+
+在这一部分，我们将分析合成菌群对玉米植株蛋白质总量的影响。我们将使用箱线图来展示不同合成菌群对玉米植株蛋白质总量的影响。
+
+```{r}
+#| label: fig-protein-syncom
+#| fig-cap: 合成菌群对植株蛋白质总量的影响
+syncom_composition = read_csv(xfun::magic_path("20250418-syncom-composition.csv")) |> 
+  mutate(syncom_id = as_factor(syncom_id))
+
+protein_all = protein_all_parts |> 
+  group_by(syncom_id, rep) |> 
+  summarize(protein_content = sum(protein_content)) |>
+  ungroup() |>
+  mutate(syncom_id = as_factor(syncom_id)) |>
+  left_join(syncom_composition)
+
+
+ggplot(protein_all, aes(x = syncom_composition, y = protein_content)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(method = "t.test", 
+                     ref.group = "Blank", 
+                     label = "p.signif", 
+                     hide.ns = TRUE) +
+  labs(title = "Effect of synthetic community on third leaf protein concentration",
+       x = "Synthetic community",
+       y = "Protein concentration (mg/g)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.margin = margin(l = 30))
+```

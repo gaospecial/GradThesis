@@ -15,6 +15,10 @@ book:
       chapters:
         - 01-lzx/data-preprocess.qmd
         - 01-lzx/data-analysis.qmd
+    - part: Student No. 2
+      chapters:
+        - 02-shix/data-preprocess.qmd
+        - 02-shix/data-analysis.qmd
     - summary.qmd
     - references.qmd
 

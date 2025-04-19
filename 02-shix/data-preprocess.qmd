@@ -1,0 +1,276 @@
+# 数据预处理
+
+将数据处理成整洁的格式，便于后续分析和可视化。
+
+## 载入包
+
+首先，载入需要用到的包。
+
+`tidyverse` 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。
+
+在这里，我们即将用到 `dplyr` 包中的 `filter()`、`mutate()`、`select()` 和 `pivot_longer()` 函数，以及 `tidyr` 包中的 `rename()` 函数和 `ggplot2` 包中的 `ggplot()` 函数，`readr` 包中的 `write_csv()` 函数。
+
+使用 `library(tidyverse)` 可以一次性载入所有的包。
+
+- `filter()` 用于筛选数据。
+- `mutate()` 用于添加或修改数据框中的列。
+- `select()` 用于选择数据框中的列。
+- `rename()` 用于重命名数据框中的列。
+- `pivot_longer()` 用于将数据框从宽格式转换为长格式。
+
+`openxlsx` 包用于读取 Excel 文件。我们将用到 `read.xlsx()` 函数来读取数据。
+
+```{r}
+# 载入必要的包
+library(tidyverse)
+library(openxlsx)
+file = xfun::magic_path("20250418-combined.xlsx")
+```
+
+
+我们将使用 `read.xlsx()` 函数来读取 Excel 文件。文件名为 `20250418-combined.xlsx`。这里，我们使用 `xfun::magic_path()` 函数来获取文件的路径。`magic_path()` 函数会自动处理文件路径的问题，确保在路径复杂的情况下也能正确找到相应的文件。
+
+文件包含多个工作表（sheet），我们将依次读取每个工作表的数据。
+
+- Sheet 1：`3月24日` 的茎长和出芽率等数据；
+- Sheet 2：`4月1日` 的鲜重和蛋白测量数据；
+- Sheet 3：`std curve`，测量蛋白质浓度的标准曲线数据；
+- Sheet 4：`4月1日6组` 的根、第 1 -3 片叶、以及根的蛋白质测量数据；
+- Sheet 5：`酶标仪结果`，测量蛋白质浓度时的酶标仪读数。
+
+## 合成菌群的编号和组成
+
+首先，我们来读取合成菌群的编号和组成。我们将使用 `read.xlsx()` 函数来读取 Excel 文件中的第二个工作表（sheet）的前 181 行和前两列的数据。我们将使用 `as_tibble()` 函数将数据转换为数据框，并使用 `unique()` 函数去除重复的行。从而得到唯一的合成菌群编号和组成。
+
+```{r}
+rawdata_syncom = read.xlsx(file, sheet = 2, rows = 1:181, cols = 1:2) |> 
+  as_tibble() |>
+  unique() |>
+  select(2, 1)
+colnames(rawdata_syncom) = c('syncom_id','syncom_composition')
+```
+
+一共有 `{r} nrow(rawdata_syncom)` 个合成菌群，分别是：
+
+```{r}
+library(kableExtra)
+kbl(rawdata_syncom)
+```
+
+将数据保存到 CSV 文件中。文件名为 `20250418-syncom-composition.csv`，使用 `write_csv()` 函数来保存数据。
+
+```{r}
+write_csv(rawdata_syncom, "data/20250418-syncom-composition.csv")
+```
+
+## 株高/茎长
+
+合成菌群对玉米茎长的影响数据保存在 Excel 文件的第一个工作表（sheet）中。我们将使用 `read.xlsx()` 函数来读取数据，并使用 `as_tibble()` 函数将数据转换为数据框。同时，我们将使用 `colnames()` 函数来修改列名。新的列名包括：`syncom_id`、`len_1`、`len_2`、`len_3` 和 `len_4`。这些列分别表示合成菌群的编号和四个重复的茎长测量值。
+
+```{r}
+# 读取数据
+rawdata_shoot_len = read.xlsx(file, sheet = 1, rows = 1:46, cols = 1:5) |>
+  as_tibble()
+colnames(rawdata_shoot_len) = c('syncom_id','len_1','len_2','len_3','len_4')
+```
+
+接下来，使用 `pivot_longer()` 函数将数据从宽格式转换为长格式。我们将使用 `starts_with("len")` 来选择以 `len` 开头的列，并将它们转换为两列：`rep` 和 `shoot_len`。同时，我们将使用 `left_join()` 函数将合成菌群的编号和组成信息添加到数据框中。
+
+```{r}
+rawdata_shoot_len = rawdata_shoot_len |> 
+  pivot_longer(cols = starts_with("len"), 
+               names_to = "rep", 
+               values_to = "shoot_len") |> 
+  left_join(rawdata_syncom)
+```
+
+接下来，我们将使用 `group_by()` 函数按 `syncom_id` 列分组，然后使用 `summarise()` 函数来计算平均值和标准差。最后，我们将使用 `mutate()` 函数将平均值和标准差合并为一个字符串，并使用 `select()` 函数来选择需要的列。最后，将结果输出为表格 [@tbl-shoot-len]。
+
+```{r}
+#| label: tbl-shoot-len
+#| tbl-cap: 合成菌群对玉米茎长的影响
+
+# 计算每个合成菌群的平均茎长和标准差
+rawdata_shoot_len |> 
+  group_by(syncom_id) |> 
+  summarise(mean_shoot_len = mean(shoot_len, na.rm = TRUE),
+            std_shoot_len = sd(shoot_len, na.rm = TRUE)) |> 
+  ungroup() |> 
+  mutate(shoot_len = paste0(round(mean_shoot_len, 2), " ± ", round(std_shoot_len, 2))) |>
+  left_join(rawdata_syncom) |>
+  select(syncom_id, syncom_composition, shoot_len)  |>
+  kbl()
+```
+
+接下来，我们将数据保存到 CSV 文件中。文件名为 `20250418-shoot-len.csv`，使用 `write_csv()` 函数来保存数据。
+
+```{r}
+write_csv(rawdata_shoot_len, "data/20250418-shoot-len.csv")
+```
+
+## 发芽率
+
+合成菌群对玉米发芽率的影响数据保存在 Excel 文件的第一个工作表（sheet）中。我们将使用 `read.xlsx()` 函数来读取数据，并使用 `as_tibble()` 函数将数据转换为数据框。同时，我们将使用 `colnames()` 函数来修改列名。新的列名包括：`syncom_id`、`num_germ` 和 `germ_rate`。这些列分别表示合成菌群的编号、发芽的数量和发芽率。
+
+```{r}
+# 读取数据
+rawdata_germ_rate = read.xlsx(file, sheet = 1, rows = 1:46, cols = c(1,7:8)) |>
+  as_tibble()
+colnames(rawdata_shoot_len) = c('syncom_id','num_germ', 'germ_rate')
+```
+
+```{r}
+#| label: tbl-germ-rate
+#| tbl-cap: 合成菌群对玉米发芽率的影响
+kbl(rawdata_germ_rate)
+```
+
+## 标准曲线
+
+这一部分，我们将读取标准曲线的数据。标准曲线的数据存储在 Excel 文件的第三个工作表（sheet）中。我们将使用 `read.xlsx()` 函数来读取数据，并使用 `as_tibble()` 函数将数据转换为数据框。同时，我们将使用 `colnames()` 函数来修改列名。新的列名包括：`protein_conc` 和 `absorbance`。
+
+```{r}
+std_curve = read.xlsx(file, sheet = 3, rows = 1:7, cols = 1:2) |>
+  as_tibble()
+colnames(std_curve) = c('protein_conc','absorbance')
+```
+
+接下来，使用 `lm()` 函数来拟合标准曲线。我们将使用 `absorbance` 列作为自变量，`protein_conc` 列作为因变量。拟合的结果将存储在 `model` 对象中。我们可以使用 `summary()` 函数来查看拟合的结果。
+
+```{r}
+# 拟合标准曲线
+model = lm(protein_conc ~ absorbance, data = std_curve)
+summary(model)
+```
+
+下一步，我们将使用 `ggplot2` 包来绘制标准曲线。我们将使用 `geom_point()` 函数来绘制散点图，使用 `geom_abline()` 函数来添加拟合的直线，并使用 `annotate()` 函数来添加文本注释。最后，我们将使用 `labs()` 函数来添加坐标轴标签。
+
+```{r}
+#| label: fig-std-curve
+#| fig-cap: 使用考马斯亮蓝染色法测定蛋白质浓度的标准曲线
+# 设置默认主题
+theme_set(theme_bw())
+
+# 绘制标准曲线
+ggplot(std_curve, aes(x = absorbance, y = protein_conc)) +
+  geom_point() +
+  geom_abline(intercept = model$coefficients[1], 
+              slope = model$coefficients[2], 
+              color = "red",
+              lty = "dashed") +
+  annotate(geom = "text", 
+           label = paste0("y = ", round(model$coefficients[2], 2), "x + ", round(model$coefficients[1], 2)), 
+            x = 0.8, y = 1.3) +
+  annotate(geom = "text", 
+           label = paste0("R² = ", round(summary(model)$r.squared, 2)),
+           x = 0.8, y = 1.25) +
+  labs(x = "Absorbance (590 nm)", y = "Protein Concentration (mg/mL)")
+```
+
+## 植株鲜重
+
+植株鲜重数据保存在 Excel 文件的第二个工作表（sheet）中。我们将使用 `read.xlsx()` 函数来读取数据，并使用 `as_tibble()` 函数将数据转换为数据框。同时，我们将使用 `colnames()` 函数来修改列名。新的列名包括：`syncom_composition`、`syncom`、`rep`、`fresh_weight_total`、`fresh_weight_above`、`fresh_weight_below` 和 `fresh_weight_first_leaf`。这些列分别表示合成菌群的组成、编号、重复次数、整株鲜重、地上部鲜重、地下部鲜重和第一片叶的鲜重。
+
+```{r}
+fresh_weight = read.xlsx(file, sheet = 2, rows = 1:181, cols = 1:7) |>
+  as_tibble()
+colnames(fresh_weight) = c('syncom_composition','syncom_id','rep','fresh_weight_total','fresh_weight_above','fresh_weight_below','fresh_weight_first_leaf')
+
+write_csv(fresh_weight, "data/20250418-fresh-weight.csv")
+```
+
+## 第一片叶的蛋白质含量
+
+```{r}
+protein_first_leaf = read.xlsx(file, sheet = 2, rows = 1:181, cols = c(1:3, 7:12)) |>
+  as_tibble()
+colnames(protein_first_leaf) = c('syncom_composition','syncom_id','rep','weight_first_leaf','weight_sample', 'absorbance','protein_conc_ml','protein_conc_g','protein_content')
+
+protein_first_leaf
+```
+
+::: {.callout-warning}
+
+Excel 文档中，在计算取自第一片叶的样品的蛋白质浓度的时候，使用了错误的公式。错误的公式以蛋白质含量为自变量，以吸光值为因变量。而正确的公式应该是以吸光值为自变量，以蛋白质浓度为因变量。
+
+前面我们已经使用 `lm()` 函数来拟合线性模型，接下来则可以使用 `predict()` 函数来预测蛋白质浓度。这里我们将使用 `absorbance_` 列作为自变量，`protein_conc_ml` 列作为因变量。
+
+:::
+
+```{r}
+# 拟合线性模型
+protein_conc = predict(model, newdata = protein_first_leaf)
+
+protein_first_leaf$protein_conc_ml = protein_conc
+protein_first_leaf$protein_conc_g = protein_conc * 1 / protein_first_leaf$weight_sample
+
+# 计算蛋白质含量
+protein_first_leaf$protein_content = protein_first_leaf$protein_conc_g * protein_first_leaf$weight_first_leaf
+```
+
+
+```{r}
+protein_first_leaf |> 
+  select(syncom_id, syncom_composition, rep, protein_conc_g, protein_content) |> 
+  write_csv("data/20250418-protein-first-leaf.csv")
+```
+
+## 植株不同部分的蛋白质含量
+
+植株不同部分的蛋白质含量数据保存在 Excel 文件的第四个工作表（sheet）中。可分为根、第一片叶、第二片叶、第三片叶和茎。
+
+这里，我们依次读取每个部分的测试数据。使用 `select()` 函数选择需要的列，使用 `rename()` 函数修改列名，使用 `mutate()` 函数添加新的列 `part`。最后，我们将所有部分的数据合并成一个数据框。
+
+```{r}
+protein_all = read.xlsx(file, sheet = 4)
+
+protein_root = protein_all |> 
+  select(2:3, 6:8) |> 
+  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |> 
+  mutate(part = "root", .after = 1)
+
+protein_first_leaf = protein_all |>
+  select(2:3, 12:14) |> 
+  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |> 
+  mutate(part = "first_leaf", .after = 1)
+
+protein_second_leaf = protein_all |>
+  select(2:3, 18:20) |> 
+  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |> 
+  mutate(part = "second_leaf", .after = 1)
+
+protein_third_leaf = protein_all |>
+  select(2:3, 24:26) |> 
+  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |> 
+  mutate(part = "third_leaf", .after = 1)
+
+protein_stem = protein_all |>
+  select(2:3, 30:32) |> 
+  rename(syncom_id = 1, rep = 2, weight_total = 3, weight_sample = 4, absorbance = 5) |> 
+  mutate(part = "stem", .after = 1)
+
+protein_all_parts = protein_root |> 
+  bind_rows(protein_stem) |> 
+  bind_rows(protein_first_leaf) |> 
+  bind_rows(protein_second_leaf) |> 
+  bind_rows(protein_third_leaf) |> 
+  as_tibble()
+```
+
+接下来，使用 `mutate()` 函数添加新的列 `protein_conc_ml`、`protein_conc_g` 和 `protein_content`。其中，`protein_conc_ml` 列表示蛋白质浓度（mg/mL），`protein_conc_g` 列表示蛋白质浓度（mg/g），`protein_content` 列表示蛋白质含量（mg）。
+
+```{r}
+protein_all_parts = protein_all_parts |>
+  mutate(protein_conc_ml = predict(model, newdata = protein_all_parts)) |> 
+  mutate(protein_conc_g = protein_conc_ml * 1 / weight_sample) |> 
+  mutate(protein_content = protein_conc_g * weight_total) |> 
+  select(syncom_id, part, rep, protein_conc_g, protein_content)
+```
+
+最后，我们将数据保存到 CSV 文件中。文件名为 `20250418-protein-all-parts.csv`，使用 `write_csv()` 函数来保存数据。
+
+```{r}
+protein_all_parts |>
+  write_csv("data/20250418-protein-all-parts.csv")
+
+```
