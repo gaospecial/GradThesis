@@ -1,0 +1,62 @@
+# 数据分析
+
+## 载入需要的包
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(kableExtra)
+
+theme_set(theme_bw())
+```
+
+
+## 载入数据
+
+```{r}
+file = xfun::magic_path("growth-data.csv")
+data = read_csv(file) |> 
+  mutate(medium = paste0(base_media, "-", transformer))
+```
+
+## 在不同培养基中的生长情况
+
+```{r}
+data |> 
+  filter(time == "D8") |>
+  ggplot(aes(inoculation, absorbance)) +
+  geom_boxplot(outliers = FALSE) +
+  geom_jitter(aes(color = base_medium), alpha = 0.5, width = 0.2) +
+  facet_wrap(~ base_medium, ncol = 1) +
+  stat_compare_means(
+    ref.group = "blank",
+    method = "wilcox.test",
+    label = "p.signif",
+    hide.ns = TRUE,
+    label.y = 1.5,
+  ) +
+  labs(x = "Inoculation", y = "Absorbance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## 生长曲线
+
+```{r}
+#| label: fig-growth-curve
+#| fig-cap: 各菌株在不同培养基中（共 60 种）的生长曲线
+#| fig-width: 10
+data |> 
+  filter(transformer != "blank", inoculation != "blank") |>
+  summarize(
+    absorbance = median(absorbance),
+    .by = c("inoculation", "time", "base_medium", "transformer")
+  ) |> 
+  mutate(time = as.numeric(str_extract(time, "\\d+")),
+         condition = paste0(base_medium, "-", transformer)) |>
+  ggplot(aes(time, absorbance, color = inoculation)) +
+  geom_line() +
+  facet_wrap(~ condition, ncol = 10)
+```
+
+
