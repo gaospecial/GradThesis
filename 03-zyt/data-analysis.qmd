@@ -15,11 +15,15 @@ theme_set(theme_bw())
 
 ```{r}
 file = xfun::magic_path("growth-data.csv")
-data = read_csv(file) |> 
-  mutate(medium = paste0(base_media, "-", transformer))
+data = read_csv(file)
 ```
 
 ## 在不同培养基中的生长情况
+
+首先，我们比较一下各个菌株在不同培养基中的生长情况。我们将使用 `ggplot2` 包中的 `geom_boxplot()` 函数来绘制箱线图，并使用 `geom_jitter()` 函数来添加散点图，以便更好地观察数据的分布情况。
+我们将使用 `stat_compare_means()` 函数来添加统计显著性标记。该函数可以自动计算 p 值，并在图中添加显著性标记。
+
+这里，我们仅取了 D8 的数据进行比较。
 
 ```{r}
 data |> 
@@ -41,6 +45,8 @@ data |>
 
 
 ## 生长曲线
+
+这一部分，我们比较各个菌株在不同培养基中的生长曲线。
 
 ```{r}
 #| label: fig-growth-curve

@@ -166,5 +166,9 @@ growth_data |>
   mutate(isblank = (inoculation == "blank")) |> 
   ggplot(aes(x = absorbance, color = isblank)) +
   geom_density() +
-  labs(title = "空白孔的吸光度")
+  labs(title = "Absorbance of blank wells",
+       x = "Absorbance",
+       y = "Density") +
+  scale_color_manual(values = c("black", "red")) +
+  theme(legend.position = "none")
 ```
