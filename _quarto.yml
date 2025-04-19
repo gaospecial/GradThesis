@@ -5,7 +5,7 @@ execute:
   freeze: auto
 
 book:
-  title: "GradeThesis"
+  title: "GradThesis"
   author: "gaoch@mail.hzau.edu.cn"
   date: now
   chapters:

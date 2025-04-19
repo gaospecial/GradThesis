@@ -26,6 +26,9 @@ data = read_csv(file)
 这里，我们仅取了 D8 的数据进行比较。
 
 ```{r}
+#| label: fig-d8-absorbance
+#| fig-cap: 各菌株在不同培养基中（共 60 种）的生长情况
+#| fig-width: 10
 data |> 
   filter(time == "D8") |>
   ggplot(aes(inoculation, absorbance)) +
@@ -52,6 +55,7 @@ data |>
 #| label: fig-growth-curve
 #| fig-cap: 各菌株在不同培养基中（共 60 种）的生长曲线
 #| fig-width: 10
+#| fig-height: 8
 data |> 
   filter(transformer != "blank", inoculation != "blank") |>
   summarize(
