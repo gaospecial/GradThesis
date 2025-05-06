@@ -1,0 +1,174 @@
+# 数据预处理
+
+将数据处理成整洁的格式，便于后续分析和可视化。
+
+## 载入包
+
+首先，载入需要用到的包。
+
+`tidyverse` 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。
+
+在这里，我们即将用到 `dplyr` 包中的 `filter()`、`mutate()`、`select()` 和 `pivot_longer()` 函数，以及 `tidyr` 包中的 `rename()` 函数和 `ggplot2` 包中的 `ggplot()` 函数，`readr` 包中的 `write_csv()` 函数。
+
+使用 `library(tidyverse)` 可以一次性载入所有的包。
+
+- `filter()` 用于筛选数据。
+- `mutate()` 用于添加或修改数据框中的列。
+- `select()` 用于选择数据框中的列。
+- `rename()` 用于重命名数据框中的列。
+- `pivot_longer()` 用于将数据框从宽格式转换为长格式。
+
+`openxlsx` 包用于读取 Excel 文件。我们将用到 `read.xlsx()` 函数来读取数据。
+
+```{r}
+# 载入必要的包
+library(tidyverse)
+library(openxlsx)
+library(kableExtra)
+```
+
+## 菌株清单
+
+```{r}
+file = xfun::magic_path("plate-layout.xlsx")
+strains = read.xlsx(file, rows = 1:2, colNames = FALSE) |> 
+  t() |> 
+  as_tibble() |> 
+  rename(strain_id = 1, strain_name = 2)  |> 
+  filter(str_detect(strain_id, "^S"))
+```
+
+研究一共使用了 `{r} nrow(strains)` 个菌株 [@tbl-strains]。
+
+```{r}
+#| label: tbl-strains
+#| tbl-cap: 菌株清单
+kbl(strains)
+```
+
+
+## 生成平板布局
+
+实验一种使用了 12 块 384 孔板，关于平板布局的信息存储在 `plate-layout.xlsx` 文件中。依据该文件，我们将生成所有平板中所有孔的处理信息。
+
+文件中指出的布板规则如下：
+
+- 每块平板有 384 个孔，分为 16 行和 24 列，12 块 384 孔板一共有 4608 个孔。
+- 每块平板的基础培养基为 SES-T0（不额外加 TSB）、SES-T2（加入 1/10 TSB） 或 SES-T1（加入 1/100 TSB）。基础培养基经过 20 个物种转化，得到了 60 种不同的养分枯竭培养基。每个平板上加入 5 种不同的转化后培养基，位于第 1-15 行中。
+- 每块平板接种 20 个菌株，分布在第 3-22 列中。
+- 其余的孔中添加空白培养基。
+
+```{r}
+base_media = c("SES-T0", "SES-T2", "SES-T1")
+plate_ids = paste0("FWP", 1:12)
+
+# 生成平板孔位信息
+plate_wells = tibble(
+  plate_id = rep(plate_ids, each = 384),
+  row = rep(rep(LETTERS[1:16], times = length(plate_ids), each = 24)),
+  col = rep(1:24, times = length(plate_ids) * 16)
+)
+
+# 按照平板 ID 分配每个平板的基础培养基
+plate_base_media = tibble(
+  plate_id = plate_ids,
+  base_medium = rep(base_media, each = 4)
+)
+
+# 按照 plate_id 和 row 分配每个平板中培养基的转化者
+plate_transformers = tibble(
+  plate_id = rep(plate_ids, each = 15),
+  row = rep(LETTERS[1:15], times = length(plate_ids)),
+  transformer = rep(rep(strains$strain_id, each = 3), times = 3)
+)
+
+# 按照 plate_id 和 col 分配每个平板中接种的菌株
+inoculations = tibble(
+  col = 1:24,
+  inoculation = c("blank","blank", strains$strain_id, "blank", "blank")
+)
+
+# 合并全部信息，生成平板布局
+plate_layout = plate_wells |> 
+  left_join(plate_base_media, by = "plate_id") |> 
+  left_join(plate_transformers, by = c("plate_id", "row")) |> 
+  complete(plate_id, row, fill = list(transformer = "blank")) |>
+  left_join(inoculations, by = "col") |> 
+  mutate(well = paste0(row, col)) |> 
+  select(plate_id, well, base_medium, transformer, inoculation)
+
+plate_layout
+```
+
+最终生成的平板布局信息存储在 `plate_layout` 数据框中。该数据框包含了平板 ID、孔位、基础培养基、转化者和接种菌株的信息。该数据框共有 `{r} nrow(plate_layout)` 行数据。
+
+
+## 读取酶标仪读数
+
+酶标仪读数存储在 `data/20250418/reads` 文件夹中。文件名为平板 ID，所在的子文件为测量的时间。
+
+```{r}
+read_files = list.files("data/20250418/reads", pattern = "xlsx$", full.names = TRUE, recursive = TRUE)
+```
+
+一共有 `{r} length(read_files)` 个文件需要被读取。因为这些文件的结构都一样，所以这里写一个函数来读取这些文件。
+
+该函数的输入为文件名，输出为一个数据框，包含了平板 ID、孔位、时间和吸光度。
+
+```{r}
+read_absorbance = function(x){
+  openxlsx::read.xlsx(x, rows = 33:49, cols = 1:25) |> 
+  rename(row = 1) |>
+  pivot_longer(cols = -row, names_to = "col", values_to = "absorbance") |> 
+  mutate(plate_id = str_remove(basename(x), ".xlsx"),
+         time = str_extract(x, "d[0-9]"),
+         well = paste0(row, col)) |> 
+  select(plate_id, well, time, absorbance)
+}
+```
+
+使用 `lapply()` 函数来读取所有的文件，并将它们合并成一个数据框。
+
+```{r}
+all_absorbance = lapply(read_files, read_absorbance) |> bind_rows()
+
+all_absorbance
+```
+
+## 生长数据合并
+
+将平板布局信息和酶标仪读数合并成一个数据框，同时将菌株 ID 转换为菌株名称，以便于后续分析。
+
+```{r}
+strain2name = c("blank", strains$strain_name)
+names(strain2name) = c("blank", strains$strain_id)
+
+growth_data = plate_layout |> 
+  left_join(all_absorbance, by = c("plate_id", "well")) |> 
+  mutate(transformer = strain2name[transformer],
+         inoculation = strain2name[inoculation])
+```
+
+
+最后，把实验数据保存到 `data/20250418/growth-data.csv` 文件中。
+
+```{r}
+write_csv(growth_data, "data/20250418/growth-data.csv")
+```
+
+## 数据校验
+
+### 空白孔的吸光度
+
+
+```{r}
+growth_data |> 
+  mutate(isblank = (inoculation == "blank")) |> 
+  ggplot(aes(x = absorbance, color = isblank)) +
+  geom_density() +
+  labs(title = "Absorbance of blank wells",
+       x = "Absorbance",
+       y = "Density") +
+  scale_color_manual(values = c("black", "red")) +
+  theme(legend.position = "none")
+```

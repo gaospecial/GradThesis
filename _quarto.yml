@@ -22,7 +22,11 @@ book:
     - part: Student No. 3
       chapters:
         - 03-zyt/data-preprocess.qmd
-        - 03-zyt/data-analysis.qmd    
+        - 03-zyt/data-analysis.qmd        
+    - part: Student No. 4
+      chapters:
+        - 04-fwfl/data-preprocess.qmd
+        - 04-fwfl/data-analysis.qmd    
     - summary.qmd
     - references.qmd
 
