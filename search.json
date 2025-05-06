@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "GradeThesis",
+    "title": "GradThesis",
     "section": "",
     "text": "Preface\nThis is a Quarto book, created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
     "crumbs": [
@@ -321,7 +321,7 @@
     "href": "03-zyt/data-preprocess.html#菌株清单",
     "title": "6  数据预处理",
     "section": "6.2 菌株清单",
-    "text": "6.2 菌株清单\n\nfile = xfun::magic_path(\"plate-layout.xlsx\")\nstrains = read.xlsx(file, rows = 1:2, colNames = FALSE) |&gt; \n  t() |&gt; \n  as_tibble() |&gt; \n  rename(strain_id = 1, strain_name = 2)  |&gt; \n  filter(str_detect(strain_id, \"^S\"))\n\n研究一共使用了 20 个菌株 Table 6.1。\n\nkbl(strains)\n\n\n\nTable 6.1: 菌株清单\n\n\n\n\n\n\nstrain_id\nstrain_name\n\n\n\n\nS1\nNJP10\n\n\nS2\nG7\n\n\nS3\nCMF9\n\n\nS4\nKF19\n\n\nS5\nG7d8\n\n\nS6\nNJP01\n\n\nS7\nCMF4\n\n\nS8\nG2\n\n\nS9\nNJP02\n\n\nS10\nG7dB\n\n\nS11\nNJP21\n\n\nS12\nG7dA\n\n\nS13\nCMF18\n\n\nS14\nNJP03\n\n\nS15\nCK1\n\n\nS16\nG8\n\n\nS17\nF27\n\n\nS18\nKF11\n\n\nS19\nF19\n\n\nS20\nG7d2",
+    "text": "6.2 菌株清单\n\nfile = xfun::magic_path(\"plate-layout.xlsx\")\nstrains = read.xlsx(file, rows = 1:2, colNames = FALSE) |&gt; \n  t() |&gt; \n  as_tibble() |&gt; \n  rename(strain_id = 1, strain_name = 2)  |&gt; \n  filter(str_detect(strain_id, \"^S\"))\n\n研究一共使用了 20 个菌株 Table 8.1。\n\nkbl(strains)\n\n\n\nTable 6.1: 菌株清单\n\n\n\n\n\n\nstrain_id\nstrain_name\n\n\n\n\nS1\nNJP10\n\n\nS2\nG7\n\n\nS3\nCMF9\n\n\nS4\nKF19\n\n\nS5\nG7d8\n\n\nS6\nNJP01\n\n\nS7\nCMF4\n\n\nS8\nG2\n\n\nS9\nNJP02\n\n\nS10\nG7dB\n\n\nS11\nNJP21\n\n\nS12\nG7dA\n\n\nS13\nCMF18\n\n\nS14\nNJP03\n\n\nS15\nCK1\n\n\nS16\nG8\n\n\nS17\nF27\n\n\nS18\nKF11\n\n\nS19\nF19\n\n\nS20\nG7d2",
     "crumbs": [
       "Student No. 3",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>数据预处理</span>"
@@ -416,13 +416,134 @@
     ]
   },
   {
+    "objectID": "04-fwfl/data-preprocess.html",
+    "href": "04-fwfl/data-preprocess.html",
+    "title": "8  数据预处理",
+    "section": "",
+    "text": "8.1 载入包\n首先，载入需要用到的包。\ntidyverse 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。\n在这里，我们即将用到 dplyr 包中的 filter()、mutate()、select() 和 pivot_longer() 函数，以及 tidyr 包中的 rename() 函数和 ggplot2 包中的 ggplot() 函数，readr 包中的 write_csv() 函数。\n使用 library(tidyverse) 可以一次性载入所有的包。\nopenxlsx 包用于读取 Excel 文件。我们将用到 read.xlsx() 函数来读取数据。\n# 载入必要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(openxlsx)\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#载入包",
+    "href": "04-fwfl/data-preprocess.html#载入包",
+    "title": "8  数据预处理",
+    "section": "",
+    "text": "filter() 用于筛选数据。\nmutate() 用于添加或修改数据框中的列。\nselect() 用于选择数据框中的列。\nrename() 用于重命名数据框中的列。\npivot_longer() 用于将数据框从宽格式转换为长格式。",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#菌株清单",
+    "href": "04-fwfl/data-preprocess.html#菌株清单",
+    "title": "8  数据预处理",
+    "section": "8.2 菌株清单",
+    "text": "8.2 菌株清单\n\nfile = xfun::magic_path(\"plate-layout.xlsx\")\nstrains = read.xlsx(file, rows = 1:2, colNames = FALSE) |&gt; \n  t() |&gt; \n  as_tibble() |&gt; \n  rename(strain_id = 1, strain_name = 2)  |&gt; \n  filter(str_detect(strain_id, \"^S\"))\n\n研究一共使用了 20 个菌株 Table 8.1。\n\nkbl(strains)\n\n\n\nTable 8.1: 菌株清单\n\n\n\n\n\n\nstrain_id\nstrain_name\n\n\n\n\nS1\nNJP10\n\n\nS2\nG7\n\n\nS3\nCMF9\n\n\nS4\nKF19\n\n\nS5\nG7d8\n\n\nS6\nNJP01\n\n\nS7\nCMF4\n\n\nS8\nG2\n\n\nS9\nNJP02\n\n\nS10\nG7dB\n\n\nS11\nNJP21\n\n\nS12\nG7dA\n\n\nS13\nCMF18\n\n\nS14\nNJP03\n\n\nS15\nCK1\n\n\nS16\nG8\n\n\nS17\nF27\n\n\nS18\nKF11\n\n\nS19\nF19\n\n\nS20\nG7d2",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#生成平板布局",
+    "href": "04-fwfl/data-preprocess.html#生成平板布局",
+    "title": "8  数据预处理",
+    "section": "8.3 生成平板布局",
+    "text": "8.3 生成平板布局\n实验一种使用了 12 块 384 孔板，关于平板布局的信息存储在 plate-layout.xlsx 文件中。依据该文件，我们将生成所有平板中所有孔的处理信息。\n文件中指出的布板规则如下：\n\n每块平板有 384 个孔，分为 16 行和 24 列，12 块 384 孔板一共有 4608 个孔。\n每块平板的基础培养基为 SES-T0（不额外加 TSB）、SES-T2（加入 1/10 TSB） 或 SES-T1（加入 1/100 TSB）。基础培养基经过 20 个物种转化，得到了 60 种不同的养分枯竭培养基。每个平板上加入 5 种不同的转化后培养基，位于第 1-15 行中。\n每块平板接种 20 个菌株，分布在第 3-22 列中。\n其余的孔中添加空白培养基。\n\n\nbase_media = c(\"SES-T0\", \"SES-T2\", \"SES-T1\")\nplate_ids = paste0(\"FWP\", 1:12)\n\n# 生成平板孔位信息\nplate_wells = tibble(\n  plate_id = rep(plate_ids, each = 384),\n  row = rep(rep(LETTERS[1:16], times = length(plate_ids), each = 24)),\n  col = rep(1:24, times = length(plate_ids) * 16)\n)\n\n# 按照平板 ID 分配每个平板的基础培养基\nplate_base_media = tibble(\n  plate_id = plate_ids,\n  base_medium = rep(base_media, each = 4)\n)\n\n# 按照 plate_id 和 row 分配每个平板中培养基的转化者\nplate_transformers = tibble(\n  plate_id = rep(plate_ids, each = 15),\n  row = rep(LETTERS[1:15], times = length(plate_ids)),\n  transformer = rep(rep(strains$strain_id, each = 3), times = 3)\n)\n\n# 按照 plate_id 和 col 分配每个平板中接种的菌株\ninoculations = tibble(\n  col = 1:24,\n  inoculation = c(\"blank\",\"blank\", strains$strain_id, \"blank\", \"blank\")\n)\n\n# 合并全部信息，生成平板布局\nplate_layout = plate_wells |&gt; \n  left_join(plate_base_media, by = \"plate_id\") |&gt; \n  left_join(plate_transformers, by = c(\"plate_id\", \"row\")) |&gt; \n  complete(plate_id, row, fill = list(transformer = \"blank\")) |&gt;\n  left_join(inoculations, by = \"col\") |&gt; \n  mutate(well = paste0(row, col)) |&gt; \n  select(plate_id, well, base_medium, transformer, inoculation)\n\nplate_layout\n\n# A tibble: 4,608 × 5\n   plate_id well  base_medium transformer inoculation\n   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      \n 1 FWP1     A1    SES-T0      S1          blank      \n 2 FWP1     A2    SES-T0      S1          blank      \n 3 FWP1     A3    SES-T0      S1          S1         \n 4 FWP1     A4    SES-T0      S1          S2         \n 5 FWP1     A5    SES-T0      S1          S3         \n 6 FWP1     A6    SES-T0      S1          S4         \n 7 FWP1     A7    SES-T0      S1          S5         \n 8 FWP1     A8    SES-T0      S1          S6         \n 9 FWP1     A9    SES-T0      S1          S7         \n10 FWP1     A10   SES-T0      S1          S8         \n# ℹ 4,598 more rows\n\n\n最终生成的平板布局信息存储在 plate_layout 数据框中。该数据框包含了平板 ID、孔位、基础培养基、转化者和接种菌株的信息。该数据框共有 4608 行数据。",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#读取酶标仪读数",
+    "href": "04-fwfl/data-preprocess.html#读取酶标仪读数",
+    "title": "8  数据预处理",
+    "section": "8.4 读取酶标仪读数",
+    "text": "8.4 读取酶标仪读数\n酶标仪读数存储在 data/20250418/reads 文件夹中。文件名为平板 ID，所在的子文件为测量的时间。\n\nread_files = list.files(\"data/20250418/reads\", pattern = \"xlsx$\", full.names = TRUE, recursive = TRUE)\n\n一共有 96 个文件需要被读取。因为这些文件的结构都一样，所以这里写一个函数来读取这些文件。\n该函数的输入为文件名，输出为一个数据框，包含了平板 ID、孔位、时间和吸光度。\n\nread_absorbance = function(x){\n  openxlsx::read.xlsx(x, rows = 33:49, cols = 1:25) |&gt; \n  rename(row = 1) |&gt;\n  pivot_longer(cols = -row, names_to = \"col\", values_to = \"absorbance\") |&gt; \n  mutate(plate_id = str_remove(basename(x), \".xlsx\"),\n         time = str_extract(x, \"d[0-9]\"),\n         well = paste0(row, col)) |&gt; \n  select(plate_id, well, time, absorbance)\n}\n\n使用 lapply() 函数来读取所有的文件，并将它们合并成一个数据框。\n\nall_absorbance = lapply(read_files, read_absorbance) |&gt; bind_rows()\n\nall_absorbance\n\n# A tibble: 36,864 × 4\n   plate_id well  time  absorbance\n   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;\n 1 FWP1     A1    d1        0.103 \n 2 FWP1     A2    d1        0.102 \n 3 FWP1     A3    d1        0.0994\n 4 FWP1     A4    d1        0.106 \n 5 FWP1     A5    d1        0.106 \n 6 FWP1     A6    d1        0.104 \n 7 FWP1     A7    d1        0.101 \n 8 FWP1     A8    d1        0.109 \n 9 FWP1     A9    d1        0.0988\n10 FWP1     A10   d1        0.101 \n# ℹ 36,854 more rows",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#生长数据合并",
+    "href": "04-fwfl/data-preprocess.html#生长数据合并",
+    "title": "8  数据预处理",
+    "section": "8.5 生长数据合并",
+    "text": "8.5 生长数据合并\n将平板布局信息和酶标仪读数合并成一个数据框，同时将菌株 ID 转换为菌株名称，以便于后续分析。\n\nstrain2name = c(\"blank\", strains$strain_name)\nnames(strain2name) = c(\"blank\", strains$strain_id)\n\ngrowth_data = plate_layout |&gt; \n  left_join(all_absorbance, by = c(\"plate_id\", \"well\")) |&gt; \n  mutate(transformer = strain2name[transformer],\n         inoculation = strain2name[inoculation])\n\n最后，把实验数据保存到 data/20250418/growth-data.csv 文件中。\n\nwrite_csv(growth_data, \"data/20250418/growth-data.csv\")",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-preprocess.html#数据校验",
+    "href": "04-fwfl/data-preprocess.html#数据校验",
+    "title": "8  数据预处理",
+    "section": "8.6 数据校验",
+    "text": "8.6 数据校验\n\n8.6.1 空白孔的吸光度\n\ngrowth_data |&gt; \n  mutate(isblank = (inoculation == \"blank\")) |&gt; \n  ggplot(aes(x = absorbance, color = isblank)) +\n  geom_density() +\n  labs(title = \"Absorbance of blank wells\",\n       x = \"Absorbance\",\n       y = \"Density\") +\n  scale_color_manual(values = c(\"black\", \"red\")) +\n  theme(legend.position = \"none\")",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-analysis.html",
+    "href": "04-fwfl/data-analysis.html",
+    "title": "9  数据分析",
+    "section": "",
+    "text": "9.1 载入需要的包\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.4     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(ggpubr)\nlibrary(kableExtra)\n\n\nAttaching package: 'kableExtra'\n\nThe following object is masked from 'package:dplyr':\n\n    group_rows\n\ntheme_set(theme_bw())",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-analysis.html#载入数据",
+    "href": "04-fwfl/data-analysis.html#载入数据",
+    "title": "9  数据分析",
+    "section": "9.2 载入数据",
+    "text": "9.2 载入数据\n\nfile = xfun::magic_path(\"growth-data.csv\")\ndata = read_csv(file)\n\nRows: 36864 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (6): plate_id, well, base_medium, transformer, inoculation, time\ndbl (1): absorbance\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-analysis.html#在不同培养基中的生长情况",
+    "href": "04-fwfl/data-analysis.html#在不同培养基中的生长情况",
+    "title": "9  数据分析",
+    "section": "9.3 在不同培养基中的生长情况",
+    "text": "9.3 在不同培养基中的生长情况\n首先，我们比较一下各个菌株在不同培养基中的生长情况。我们将使用 ggplot2 包中的 geom_boxplot() 函数来绘制箱线图，并使用 geom_jitter() 函数来添加散点图，以便更好地观察数据的分布情况。 我们将使用 stat_compare_means() 函数来添加统计显著性标记。该函数可以自动计算 p 值，并在图中添加显著性标记。\n这里，我们仅取了 D8 的数据进行比较。\n\ndata |&gt; \n  filter(time == \"d8\") |&gt;\n  ggplot(aes(inoculation, absorbance)) +\n  geom_boxplot(outliers = FALSE) +\n  geom_jitter(aes(color = base_medium), alpha = 0.5, width = 0.2) +\n  facet_wrap(~ base_medium, ncol = 1) +\n  stat_compare_means(\n    ref.group = \"blank\",\n    method = \"wilcox.test\",\n    label = \"p.signif\",\n    hide.ns = TRUE,\n    label.y = 1.5,\n  ) +\n  labs(x = \"Inoculation\", y = \"Absorbance\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\nFigure 9.1: 各菌株在不同培养基中（共 60 种）的生长情况",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
+    "objectID": "04-fwfl/data-analysis.html#生长曲线",
+    "href": "04-fwfl/data-analysis.html#生长曲线",
+    "title": "9  数据分析",
+    "section": "9.4 生长曲线",
+    "text": "9.4 生长曲线\n这一部分，我们比较各个菌株在不同培养基中的生长曲线。\n\ndata |&gt; \n  filter(transformer != \"blank\", inoculation != \"blank\") |&gt;\n  summarize(\n    absorbance = median(absorbance),\n    .by = c(\"inoculation\", \"time\", \"base_medium\", \"transformer\")\n  ) |&gt; \n  mutate(time = as.numeric(str_extract(time, \"\\\\d+\")),\n         condition = paste0(base_medium, \"-\", transformer)) |&gt;\n  ggplot(aes(time, absorbance, color = inoculation)) +\n  geom_line() +\n  facet_wrap(~ condition, ncol = 10)\n\n\n\n\n\n\n\nFigure 9.2: 各菌株在不同培养基中（共 60 种）的生长曲线",
+    "crumbs": [
+      "Student No. 4",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据分析</span>"
+    ]
+  },
+  {
     "objectID": "summary.html",
     "href": "summary.html",
-    "title": "8  Summary",
+    "title": "10  Summary",
     "section": "",
     "text": "In summary, this book has no content whatsoever.",
     "crumbs": [
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Summary</span>"
     ]
   },
   {
