@@ -33,27 +33,32 @@ shoot_len = read_csv(file) |>
 ## 单菌是否存在
 
 ```{r}
+#| label: fig-single-strain
+#| fig-asp: 1
+#| fig-cap: 合成菌群对玉米株高的影响
+#| fig-width: 6
 strains = c("CK1","CK22","CMF9","CMF18","G5","G7","G18","KF11","F19")
 
 # 分别绘制9个菌株的箱线图
 plots = lapply(strains, function(x){
     df = shoot_len |> 
-        mutate(exist = str_detect(syncom_id, x))
+        mutate(exist = if_else(str_detect(syncom_composition, x), "True", "False"))
 
     ggplot(df, aes(exist, shoot_len)) +
         geom_boxplot(outliers = FALSE) +
         geom_jitter(width = 0.2, alpha = 0.5) +
-        stat_compare_means(method = "t.test") +
-        labs(x = paste0("Exist of ", x),
-            y = "") +
-        theme(axis.text.x = element_text(angle = 45, hjust = 1),
-                plot.margin = margin(l = 40))
+        stat_compare_means(method = "wilcox.test", 
+                           comparisons = list(c("True","False"))) +
+        labs(subtitle = paste0("Exist of ", x), x = "") +
+        scale_y_continuous(limits = c(2, 10))
 })
 
 # 给最左边的图添加y轴标签
 plots = lapply(seq_along(plots), function(i){
     if (i %in% c(1, 4, 7)){
-        plots[[i]] = ylab("Shoot length (cm)")
+        plots[[i]] = plots[[i]] + ylab("Shoot length (cm)")
+    } else{
+        plots[[i]] = plots[[i]] + ylab("")
     }
 })
 
