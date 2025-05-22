@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; 数据预处理 – GradThesis</title>
+<title>9&nbsp; 数据预处理 – GradThesis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html">Student No.&nbsp;4</a></li><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据预处理</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html">Student No.&nbsp;4</a></li><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -198,6 +198,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">数据分析</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02-shix/data-mining.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">数据挖掘</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -212,13 +218,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-zyt/data-preprocess.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">数据预处理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据预处理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../03-zyt/data-analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -235,13 +241,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-fwfl/data-preprocess.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据预处理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../04-fwfl/data-analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,14 +274,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#载入包" id="toc-载入包" class="nav-link active" data-scroll-target="#载入包"><span class="header-section-number">8.1</span> 载入包</a></li>
-  <li><a href="#菌株清单" id="toc-菌株清单" class="nav-link" data-scroll-target="#菌株清单"><span class="header-section-number">8.2</span> 菌株清单</a></li>
-  <li><a href="#生成平板布局" id="toc-生成平板布局" class="nav-link" data-scroll-target="#生成平板布局"><span class="header-section-number">8.3</span> 生成平板布局</a></li>
-  <li><a href="#读取酶标仪读数" id="toc-读取酶标仪读数" class="nav-link" data-scroll-target="#读取酶标仪读数"><span class="header-section-number">8.4</span> 读取酶标仪读数</a></li>
-  <li><a href="#生长数据合并" id="toc-生长数据合并" class="nav-link" data-scroll-target="#生长数据合并"><span class="header-section-number">8.5</span> 生长数据合并</a></li>
-  <li><a href="#数据校验" id="toc-数据校验" class="nav-link" data-scroll-target="#数据校验"><span class="header-section-number">8.6</span> 数据校验</a>
+  <li><a href="#载入包" id="toc-载入包" class="nav-link active" data-scroll-target="#载入包"><span class="header-section-number">9.1</span> 载入包</a></li>
+  <li><a href="#菌株清单" id="toc-菌株清单" class="nav-link" data-scroll-target="#菌株清单"><span class="header-section-number">9.2</span> 菌株清单</a></li>
+  <li><a href="#生成平板布局" id="toc-生成平板布局" class="nav-link" data-scroll-target="#生成平板布局"><span class="header-section-number">9.3</span> 生成平板布局</a></li>
+  <li><a href="#读取酶标仪读数" id="toc-读取酶标仪读数" class="nav-link" data-scroll-target="#读取酶标仪读数"><span class="header-section-number">9.4</span> 读取酶标仪读数</a></li>
+  <li><a href="#生长数据合并" id="toc-生长数据合并" class="nav-link" data-scroll-target="#生长数据合并"><span class="header-section-number">9.5</span> 生长数据合并</a></li>
+  <li><a href="#数据校验" id="toc-数据校验" class="nav-link" data-scroll-target="#数据校验"><span class="header-section-number">9.6</span> 数据校验</a>
   <ul class="collapse">
-  <li><a href="#空白孔的吸光度" id="toc-空白孔的吸光度" class="nav-link" data-scroll-target="#空白孔的吸光度"><span class="header-section-number">8.6.1</span> 空白孔的吸光度</a></li>
+  <li><a href="#空白孔的吸光度" id="toc-空白孔的吸光度" class="nav-link" data-scroll-target="#空白孔的吸光度"><span class="header-section-number">9.6.1</span> 空白孔的吸光度</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -283,9 +289,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html">Student No.&nbsp;4</a></li><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据预处理</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html">Student No.&nbsp;4</a></li><li class="breadcrumb-item"><a href="../04-fwfl/data-preprocess.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据预处理</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理</span></h1>
 </div>
 
 
@@ -303,8 +309,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>将数据处理成整洁的格式，便于后续分析和可视化。</p>
-<section id="载入包" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="载入包"><span class="header-section-number">8.1</span> 载入包</h2>
+<section id="载入包" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="载入包"><span class="header-section-number">9.1</span> 载入包</h2>
 <p>首先，载入需要用到的包。</p>
 <p><code>tidyverse</code> 是一个 R 数据科学包的集合，里面提供了一系列用于数据处理和可视化的函数。</p>
 <p>在这里，我们即将用到 <code>dplyr</code> 包中的 <code>filter()</code>、<code>mutate()</code>、<code>select()</code> 和 <code>pivot_longer()</code> 函数，以及 <code>tidyr</code> 包中的 <code>rename()</code> 函数和 <code>ggplot2</code> 包中的 <code>ggplot()</code> 函数，<code>readr</code> 包中的 <code>write_csv()</code> 函数。</p>
@@ -344,8 +350,8 @@ The following object is masked from 'package:dplyr':
 </div>
 </div>
 </section>
-<section id="菌株清单" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="菌株清单"><span class="header-section-number">8.2</span> 菌株清单</h2>
+<section id="菌株清单" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="菌株清单"><span class="header-section-number">9.2</span> 菌株清单</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>file <span class="ot">=</span> xfun<span class="sc">::</span><span class="fu">magic_path</span>(<span class="st">"plate-layout.xlsx"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>strains <span class="ot">=</span> <span class="fu">read.xlsx</span>(file, <span class="at">rows =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">colNames =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
@@ -354,13 +360,13 @@ The following object is masked from 'package:dplyr':
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">strain_id =</span> <span class="dv">1</span>, <span class="at">strain_name =</span> <span class="dv">2</span>)  <span class="sc">|&gt;</span> </span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(strain_id, <span class="st">"^S"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>研究一共使用了 20 个菌株 <a href="#tbl-strains" class="quarto-xref">Table&nbsp;<span>8.1</span></a>。</p>
+<p>研究一共使用了 20 个菌株 <a href="#tbl-strains" class="quarto-xref">Table&nbsp;<span>9.1</span></a>。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kbl</span>(strains)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-strains" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-strains-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;8.1: 菌株清单
+Table&nbsp;9.1: 菌株清单
 </figcaption>
 <div aria-describedby="tbl-strains-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -462,8 +468,8 @@ Table&nbsp;8.1: 菌株清单
 </div>
 </div>
 </section>
-<section id="生成平板布局" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="生成平板布局"><span class="header-section-number">8.3</span> 生成平板布局</h2>
+<section id="生成平板布局" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="生成平板布局"><span class="header-section-number">9.3</span> 生成平板布局</h2>
 <p>实验一种使用了 12 块 384 孔板，关于平板布局的信息存储在 <code>plate-layout.xlsx</code> 文件中。依据该文件，我们将生成所有平板中所有孔的处理信息。</p>
 <p>文件中指出的布板规则如下：</p>
 <ul>
@@ -531,8 +537,8 @@ Table&nbsp;8.1: 菌株清单
 </div>
 <p>最终生成的平板布局信息存储在 <code>plate_layout</code> 数据框中。该数据框包含了平板 ID、孔位、基础培养基、转化者和接种菌株的信息。该数据框共有 4608 行数据。</p>
 </section>
-<section id="读取酶标仪读数" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="读取酶标仪读数"><span class="header-section-number">8.4</span> 读取酶标仪读数</h2>
+<section id="读取酶标仪读数" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="读取酶标仪读数"><span class="header-section-number">9.4</span> 读取酶标仪读数</h2>
 <p>酶标仪读数存储在 <code>data/20250418/reads</code> 文件夹中。文件名为平板 ID，所在的子文件为测量的时间。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>read_files <span class="ot">=</span> <span class="fu">list.files</span>(<span class="st">"data/20250418/reads"</span>, <span class="at">pattern =</span> <span class="st">"xlsx$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -573,8 +579,8 @@ Table&nbsp;8.1: 菌株清单
 </div>
 </div>
 </section>
-<section id="生长数据合并" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="生长数据合并"><span class="header-section-number">8.5</span> 生长数据合并</h2>
+<section id="生长数据合并" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="生长数据合并"><span class="header-section-number">9.5</span> 生长数据合并</h2>
 <p>将平板布局信息和酶标仪读数合并成一个数据框，同时将菌株 ID 转换为菌株名称，以便于后续分析。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>strain2name <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"blank"</span>, strains<span class="sc">$</span>strain_name)</span>
@@ -590,10 +596,10 @@ Table&nbsp;8.1: 菌株清单
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(growth_data, <span class="st">"data/20250418/growth-data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="数据校验" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="数据校验"><span class="header-section-number">8.6</span> 数据校验</h2>
-<section id="空白孔的吸光度" class="level3" data-number="8.6.1">
-<h3 data-number="8.6.1" class="anchored" data-anchor-id="空白孔的吸光度"><span class="header-section-number">8.6.1</span> 空白孔的吸光度</h3>
+<section id="数据校验" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="数据校验"><span class="header-section-number">9.6</span> 数据校验</h2>
+<section id="空白孔的吸光度" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1" class="anchored" data-anchor-id="空白孔的吸光度"><span class="header-section-number">9.6.1</span> 空白孔的吸光度</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>growth_data <span class="sc">|&gt;</span> </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">isblank =</span> (inoculation <span class="sc">==</span> <span class="st">"blank"</span>)) <span class="sc">|&gt;</span> </span>
@@ -1041,12 +1047,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../03-zyt/data-analysis.html" class="pagination-link" aria-label="数据分析">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据分析</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据分析</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../04-fwfl/data-analysis.html" class="pagination-link" aria-label="数据分析">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据分析</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据分析</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
