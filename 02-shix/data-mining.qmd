@@ -1,0 +1,62 @@
+# 数据挖掘
+
+## 载入需要的包
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(showtext)
+library(kableExtra)
+
+theme_set(theme_bw())
+showtext_auto()
+```
+
+
+## 对玉米株高的影响
+
+下面，我们将分析合成菌群对玉米株高的影响。我们将使用箱线图来展示不同合成菌群对玉米株高的影响。
+
+```{r}
+#| label: fig-shoot-height
+#| fig-cap: 合成菌群对玉米株高的影响
+#| fig-width: 8
+
+# 指定数据文件路径
+file = xfun::magic_path("20250418-shoot-len.csv")
+
+# 读取数据
+shoot_len = read_csv(file) |> 
+  mutate(syncom_id = as_factor(syncom_id))
+```
+
+## 单菌是否存在
+
+```{r}
+strains = c("CK1","CK22","CMF9","CMF18","G5","G7","G18","KF11","F19")
+
+# 分别绘制9个菌株的箱线图
+plots = lapply(strains, function(x){
+    df = shoot_len |> 
+        mutate(exist = str_detect(syncom_id, x))
+
+    ggplot(df, aes(exist, shoot_len)) +
+        geom_boxplot(outliers = FALSE) +
+        geom_jitter(width = 0.2, alpha = 0.5) +
+        stat_compare_means(method = "t.test") +
+        labs(x = paste0("Exist of ", x),
+            y = "") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1),
+                plot.margin = margin(l = 40))
+})
+
+# 给最左边的图添加y轴标签
+plots = lapply(seq_along(plots), function(i){
+    if (i %in% c(1, 4, 7)){
+        plots[[i]] = ylab("Shoot length (cm)")
+    }
+})
+
+# 将9个图合并为一个图
+cowplot::plot_grid(plotlist = plots, ncol = 3, labels = "AUTO")
+```

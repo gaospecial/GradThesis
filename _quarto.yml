@@ -19,6 +19,7 @@ book:
       chapters:
         - 02-shix/data-preprocess.qmd
         - 02-shix/data-analysis.qmd
+        - 02-shix/data-mining.qmd
     - part: Student No. 3
       chapters:
         - 03-zyt/data-preprocess.qmd
